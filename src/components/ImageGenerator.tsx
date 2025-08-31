@@ -1,15 +1,16 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
+// API Key padrão do Google Gemini
+const DEFAULT_API_KEY = "AIzaSyCT7Og4oj9ChYgTKIqLF8BIhcUeZSn8naU";
+
 export const ImageGenerator = () => {
   const [prompt, setPrompt] = useState("");
-  const [apiKey, setApiKey] = useState("");
   const [generatedImage, setGeneratedImage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -19,17 +20,12 @@ export const ImageGenerator = () => {
       return;
     }
 
-    if (!apiKey.trim()) {
-      toast.error("Por favor, insira sua API Key do Google Gemini");
-      return;
-    }
-
     setIsLoading(true);
     setGeneratedImage(null);
 
     try {
       const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image-preview:generateContent?key=${apiKey}`,
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image-preview:generateContent?key=${DEFAULT_API_KEY}`,
         {
           method: "POST",
           headers: {
@@ -87,28 +83,6 @@ export const ImageGenerator = () => {
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="apiKey">API Key do Google Gemini</Label>
-            <Input
-              id="apiKey"
-              type="password"
-              placeholder="Cole sua API Key aqui..."
-              value={apiKey}
-              onChange={(e) => setApiKey(e.target.value)}
-            />
-            <p className="text-sm text-muted-foreground">
-              Obtenha sua API Key em{" "}
-              <a
-                href="https://ai.google.dev/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-primary hover:underline"
-              >
-                Google AI Studio
-              </a>
-            </p>
-          </div>
-
-          <div className="space-y-2">
             <Label htmlFor="prompt">Descrição da Imagem</Label>
             <Textarea
               id="prompt"
@@ -121,7 +95,7 @@ export const ImageGenerator = () => {
 
           <Button
             onClick={generateImage}
-            disabled={isLoading || !prompt.trim() || !apiKey.trim()}
+            disabled={isLoading || !prompt.trim()}
             className="w-full"
           >
             {isLoading ? (
