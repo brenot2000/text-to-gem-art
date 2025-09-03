@@ -165,7 +165,7 @@ export default {
 				'accordion-up': 'accordion-up 0.2s ease-out',
 				'fade-in-up': 'fade-in-up 0.8s ease-out',
 				'float-smooth': 'float-smooth 4s ease-in-out infinite',
-				'pulse-glow': 'pulse-glow 5s ease-in-out infinite',
+				'pulse-glow': 'pulse-glow 8s ease-in-out infinite',
 				'slide-in-right': 'slide-in-right 0.6s ease-out',
 				'slide-in-left': 'slide-in-left 0.6s ease-out',
 				'morph': 'morph 8s ease-in-out infinite',

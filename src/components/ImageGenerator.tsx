@@ -306,9 +306,8 @@ export const ImageGenerator = () => {
                   <img
                     src={generatedImage}
                     alt="Sua transformação fitness"
-                    className="w-full rounded-3xl shadow-intense border-2 border-white/30 group-hover:shadow-glow transition-all duration-500 animate-pulse-glow"
+                    className="w-full rounded-3xl shadow-intense border-2 border-white/30 group-hover:shadow-glow transition-all duration-500"
                   />
-                  <div className="absolute -inset-1 bg-gradient-warm rounded-3xl opacity-20 blur-xl group-hover:opacity-40 transition-all duration-500"></div>
                 </div>
               </div>
             </div>
