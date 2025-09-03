@@ -29,6 +29,12 @@ export const ImageGenerator = () => {
   const [referenceImage, setReferenceImage] = useState<string | null>(null);
   const [referenceFile, setReferenceFile] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [showForm, setShowForm] = useState(false);
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: ''
+  });
 
   const convertImageToBase64 = (file: File): Promise<{ data: string; mimeType: string }> => {
     return new Promise((resolve, reject) => {
@@ -80,14 +86,27 @@ export const ImageGenerator = () => {
     setReferenceFile(null);
   };
 
-  const generateImage = async () => {
+  const handleFormSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!formData.name || !formData.email || !formData.phone) {
+      toast.error("Por favor, preencha todos os campos");
+      return;
+    }
+    generateImage();
+  };
+
+  const handleGenerateClick = () => {
     if (!referenceFile) {
       toast.error("Por favor, selecione uma imagem de referência");
       return;
     }
+    setShowForm(true);
+  };
 
+  const generateImage = async () => {
     setIsLoading(true);
     setGeneratedImage(null);
+    setShowForm(false);
 
     try {
       // Prepare parts array
@@ -238,25 +257,85 @@ export const ImageGenerator = () => {
           </div>
 
           <Button
-            onClick={generateImage}
+            onClick={handleGenerateClick}
             disabled={isLoading || !referenceFile}
             size="lg"
             className="w-full bg-gradient-hero shadow-intense hover:shadow-glow transition-all duration-500 text-xl px-8 py-6 h-auto animate-glow-border disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {isLoading ? (
-              <>
-                <Loader2 className="w-6 h-6 mr-3 animate-spin" />
-                Criando sua transformação...
-              </>
-            ) : (
-              <>
-                <Zap className="w-6 h-6 mr-3" />
-                Ver Minha Transformação
-              </>
-            )}
+            <Zap className="w-6 h-6 mr-3" />
+            Ver Minha Transformação
           </Button>
         </CardContent>
       </Card>
+
+      {/* Form Section */}
+      {showForm && (
+        <Card className="glass-card backdrop-blur-glass border-white/20 bg-white/10 shadow-intense animate-fade-in-up">
+          <CardHeader className="text-center pb-8">
+            <CardTitle className="text-3xl md:text-4xl font-bold text-white mb-4">
+              Informe seus dados para ver o resultado gratuitamente
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="p-8">
+            <form onSubmit={handleFormSubmit} className="space-y-6 max-w-md mx-auto">
+              <div className="space-y-2">
+                <Label htmlFor="name" className="text-lg font-medium text-white">Nome completo</Label>
+                <Input
+                  id="name"
+                  type="text"
+                  value={formData.name}
+                  onChange={(e) => setFormData({...formData, name: e.target.value})}
+                  className="bg-white/10 border-white/20 text-white placeholder:text-white/60 focus:border-white/40"
+                  placeholder="Digite seu nome completo"
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="email" className="text-lg font-medium text-white">E-mail</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  value={formData.email}
+                  onChange={(e) => setFormData({...formData, email: e.target.value})}
+                  className="bg-white/10 border-white/20 text-white placeholder:text-white/60 focus:border-white/40"
+                  placeholder="Digite seu e-mail"
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="phone" className="text-lg font-medium text-white">Telefone celular</Label>
+                <Input
+                  id="phone"
+                  type="tel"
+                  value={formData.phone}
+                  onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                  className="bg-white/10 border-white/20 text-white placeholder:text-white/60 focus:border-white/40"
+                  placeholder="(11) 99999-9999"
+                  required
+                />
+              </div>
+              <Button
+                type="submit"
+                disabled={isLoading}
+                size="lg"
+                className="w-full bg-gradient-hero shadow-intense hover:shadow-glow transition-all duration-500 text-xl px-8 py-6 h-auto animate-glow-border"
+              >
+                {isLoading ? (
+                  <>
+                    <Loader2 className="w-6 h-6 mr-3 animate-spin" />
+                    Criando sua transformação...
+                  </>
+                ) : (
+                  <>
+                    <Sparkles className="w-6 h-6 mr-3" />
+                    Gerar Resultado Gratuito
+                  </>
+                )}
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Results Section */}
       {generatedImage && (
