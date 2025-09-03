@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { Loader2, Upload, X, Camera, Sparkles } from "lucide-react";
+import { Loader2, Upload, X, Camera, Sparkles, Zap } from "lucide-react";
 import { toast } from "sonner";
 
 // API Key padrão do Google Gemini
@@ -154,32 +154,35 @@ export const ImageGenerator = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8">
+    <div className="max-w-7xl mx-auto space-y-12">
       {/* Upload Section */}
-      <Card className="shadow-luxury border-0 bg-card/50 backdrop-blur-sm">
+      <Card className="glass-card backdrop-blur-glass border-white/20 bg-white/10 shadow-intense animate-fade-in-up">
         <CardHeader className="text-center pb-8">
-          <div className="flex justify-center mb-4">
-            <div className="p-3 rounded-full bg-gradient-accent shadow-soft">
-              <Camera className="w-6 h-6 text-accent-foreground" />
+          <div className="flex justify-center mb-6">
+            <div className="relative">
+              <div className="p-4 rounded-full bg-gradient-accent shadow-glow animate-pulse-glow">
+                <Camera className="w-8 h-8 text-white" />
+              </div>
+              <div className="absolute inset-0 rounded-full bg-gradient-accent opacity-30 blur-xl animate-pulse-glow"></div>
             </div>
           </div>
-          <CardTitle className="text-2xl font-bold">Descubra Sua Melhor Versão</CardTitle>
-          <p className="text-muted-foreground mt-2">
+          <CardTitle className="text-3xl md:text-4xl font-bold text-white mb-4">Descubra Sua Melhor Versão</CardTitle>
+          <p className="text-white/80 text-xl">
             Envie sua foto e veja como você ficaria com o corpo que sempre sonhou
           </p>
         </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="space-y-4">
-            <Label htmlFor="referenceImage" className="text-lg font-semibold">Sua Foto Atual</Label>
+        <CardContent className="space-y-8 p-8">
+          <div className="space-y-6">
+            <Label htmlFor="referenceImage" className="text-2xl font-bold text-white">Sua Foto Atual</Label>
             {!referenceImage ? (
-              <div className="border-2 border-dashed border-primary/30 rounded-2xl p-8 text-center bg-gradient-soft hover:border-primary/50 transition-all duration-300">
-                <div className="animate-float">
-                  <Upload className="mx-auto h-12 w-12 text-primary mb-4" />
+              <div className="border-2 border-dashed border-white/30 rounded-3xl p-12 text-center bg-white/5 hover:border-white/50 hover:bg-white/10 transition-all duration-500 group">
+                <div className="animate-float-smooth group-hover:scale-110 transition-transform duration-500">
+                  <Upload className="mx-auto h-16 w-16 text-white mb-6" />
                 </div>
-                <h3 className="text-lg font-semibold mb-2 text-foreground">
+                <h3 className="text-2xl font-bold mb-4 text-white">
                   Faça o upload da sua foto
                 </h3>
-                <p className="text-sm text-muted-foreground mb-6 max-w-sm mx-auto">
+                <p className="text-lg text-white/70 mb-8 max-w-md mx-auto leading-relaxed">
                   Siga o tutorial acima para uma foto perfeita e resultados mais precisos
                 </p>
                 <Input
@@ -192,32 +195,32 @@ export const ImageGenerator = () => {
                 <Button
                   type="button"
                   size="lg"
-                  className="bg-gradient-luxury shadow-luxury hover:shadow-glow transition-all duration-300"
+                  className="bg-gradient-primary shadow-intense hover:shadow-glow transition-all duration-300 text-lg px-8 py-4 h-auto animate-pulse-glow"
                   onClick={() => document.getElementById('referenceImage')?.click()}
                 >
-                  <Upload className="w-5 h-5 mr-2" />
+                  <Upload className="w-6 h-6 mr-3" />
                   Escolher Foto
                 </Button>
               </div>
             ) : (
-              <div className="relative border-2 border-primary/20 rounded-2xl p-6 bg-gradient-soft">
-                <div className="flex items-start gap-6">
+              <div className="relative border-2 border-white/30 rounded-3xl p-8 bg-white/10 animate-fade-in-up">
+                <div className="flex items-start gap-8">
                   <div className="relative">
                     <img
                       src={referenceImage}
                       alt="Sua foto atual"
-                      className="w-32 h-32 object-cover rounded-xl shadow-soft border-2 border-primary/20"
+                      className="w-40 h-40 object-cover rounded-2xl shadow-intense border-2 border-white/30"
                     />
-                    <div className="absolute -top-2 -right-2 p-1 rounded-full bg-primary shadow-soft">
-                      <Sparkles className="w-4 h-4 text-primary-foreground" />
+                    <div className="absolute -top-3 -right-3 p-2 rounded-full bg-gradient-secondary shadow-glow">
+                      <Sparkles className="w-5 h-5 text-white" />
                     </div>
                   </div>
                   <div className="flex-1">
-                    <h4 className="text-lg font-semibold text-foreground mb-2">Foto carregada com sucesso!</h4>
-                    <p className="text-sm text-muted-foreground mb-2">
+                    <h4 className="text-2xl font-bold text-white mb-3">Foto carregada com sucesso!</h4>
+                    <p className="text-lg text-white/80 mb-2">
                       {referenceFile?.name}
                     </p>
-                    <p className="text-xs text-muted-foreground">
+                    <p className="text-white/60">
                       Tamanho: {Math.round((referenceFile?.size || 0) / 1024)}KB
                     </p>
                   </div>
@@ -226,9 +229,9 @@ export const ImageGenerator = () => {
                     variant="outline"
                     size="icon"
                     onClick={removeReferenceImage}
-                    className="shrink-0 hover:bg-destructive/10 hover:border-destructive/20"
+                    className="shrink-0 border-white/30 hover:border-red-400 hover:bg-red-500/20 bg-white/10 backdrop-blur-sm"
                   >
-                    <X className="h-4 w-4" />
+                    <X className="h-5 w-5 text-white" />
                   </Button>
                 </div>
               </div>
@@ -239,16 +242,16 @@ export const ImageGenerator = () => {
             onClick={generateImage}
             disabled={isLoading || !referenceFile}
             size="lg"
-            className="w-full bg-gradient-luxury shadow-luxury hover:shadow-glow transition-all duration-300 animate-glow"
+            className="w-full bg-gradient-hero shadow-intense hover:shadow-glow transition-all duration-500 text-xl px-8 py-6 h-auto animate-pulse-glow disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isLoading ? (
               <>
-                <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                <Loader2 className="w-6 h-6 mr-3 animate-spin" />
                 Criando sua transformação...
               </>
             ) : (
               <>
-                <Sparkles className="w-5 h-5 mr-2" />
+                <Zap className="w-6 h-6 mr-3" />
                 Ver Minha Transformação
               </>
             )}
@@ -258,64 +261,67 @@ export const ImageGenerator = () => {
 
       {/* Results Section */}
       {generatedImage && (
-        <Card className="shadow-luxury border-0 bg-card/50 backdrop-blur-sm animate-fade-in">
+        <Card className="glass-card backdrop-blur-glass border-white/20 bg-white/10 shadow-intense animate-fade-in-up">
           <CardHeader className="text-center pb-8">
-            <div className="flex justify-center mb-4">
-              <div className="p-3 rounded-full bg-gradient-luxury shadow-glow animate-float">
-                <Sparkles className="w-6 h-6 text-white" />
+            <div className="flex justify-center mb-6">
+              <div className="relative">
+                <div className="p-4 rounded-full bg-gradient-warm shadow-glow animate-pulse-glow">
+                  <Sparkles className="w-8 h-8 text-white" />
+                </div>
+                <div className="absolute inset-0 rounded-full bg-gradient-warm opacity-30 blur-xl animate-pulse-glow"></div>
               </div>
             </div>
-            <CardTitle className="text-2xl font-bold bg-gradient-luxury bg-clip-text text-transparent">
+            <CardTitle className="text-3xl md:text-4xl font-bold bg-gradient-warm bg-clip-text text-transparent mb-4">
               Sua Melhor Versão Revelada
             </CardTitle>
-            <p className="text-muted-foreground mt-2">
+            <p className="text-white/80 text-xl">
               Compare e veja a diferença - esta poderia ser você em 30 dias!
             </p>
           </CardHeader>
-          <CardContent>
-            <div className="grid md:grid-cols-2 gap-8">
+          <CardContent className="p-8">
+            <div className="grid lg:grid-cols-2 gap-12">
               {/* Before Image */}
-              <div className="space-y-4">
+              <div className="space-y-6 animate-slide-in-left">
                 <div className="text-center">
-                  <h3 className="text-lg font-semibold text-muted-foreground mb-2">ANTES</h3>
-                  <div className="w-16 h-1 bg-muted mx-auto rounded-full"></div>
+                  <h3 className="text-2xl font-bold text-white/70 mb-4">ANTES</h3>
+                  <div className="w-24 h-1 bg-white/30 mx-auto rounded-full"></div>
                 </div>
                 <div className="relative group">
                   <img
                     src={referenceImage}
                     alt="Sua foto original"
-                    className="w-full rounded-2xl shadow-soft border-2 border-border group-hover:shadow-luxury transition-all duration-300"
+                    className="w-full rounded-3xl shadow-intense border-2 border-white/20 group-hover:shadow-glow transition-all duration-500"
                   />
-                  <div className="absolute inset-0 rounded-2xl bg-black/5 group-hover:bg-black/0 transition-all duration-300"></div>
+                  <div className="absolute inset-0 rounded-3xl bg-black/10 group-hover:bg-black/0 transition-all duration-500"></div>
                 </div>
               </div>
 
               {/* After Image */}
-              <div className="space-y-4">
+              <div className="space-y-6 animate-slide-in-right">
                 <div className="text-center">
-                  <h3 className="text-lg font-semibold bg-gradient-luxury bg-clip-text text-transparent mb-2">DEPOIS</h3>
-                  <div className="w-16 h-1 bg-gradient-luxury mx-auto rounded-full shadow-glow"></div>
+                  <h3 className="text-2xl font-bold bg-gradient-warm bg-clip-text text-transparent mb-4">DEPOIS</h3>
+                  <div className="w-24 h-1 bg-gradient-warm mx-auto rounded-full shadow-glow"></div>
                 </div>
                 <div className="relative group">
                   <img
                     src={generatedImage}
                     alt="Sua transformação fitness"
-                    className="w-full rounded-2xl shadow-luxury border-2 border-primary/20 group-hover:shadow-glow transition-all duration-300 animate-glow"
+                    className="w-full rounded-3xl shadow-intense border-2 border-white/30 group-hover:shadow-glow transition-all duration-500 animate-pulse-glow"
                   />
-                  <div className="absolute -inset-1 bg-gradient-luxury rounded-2xl opacity-20 blur-xl group-hover:opacity-30 transition-all duration-300"></div>
+                  <div className="absolute -inset-1 bg-gradient-warm rounded-3xl opacity-20 blur-xl group-hover:opacity-40 transition-all duration-500"></div>
                 </div>
               </div>
             </div>
 
-            <div className="text-center mt-8 p-8 bg-gradient-luxury rounded-2xl shadow-glow text-white">
-              <h4 className="text-2xl font-bold mb-4">
+            <div className="text-center mt-12 p-10 bg-gradient-hero rounded-3xl shadow-intense animate-fade-in-up" style={{ animationDelay: '0.5s' }}>
+              <h4 className="text-3xl md:text-4xl font-bold mb-6 text-white">
                 ✨ Sabia que nós podemos te ajudar a ter esse resultado?
               </h4>
-              <p className="text-white/90 text-lg leading-relaxed mb-4">
+              <p className="text-white/90 text-xl leading-relaxed mb-6 max-w-3xl mx-auto">
                 Esta visualização mostra seu potencial real. Com o acompanhamento certo, 
                 você pode transformar essa visão em realidade.
               </p>
-              <p className="text-white/80 text-sm">
+              <p className="text-white/70 text-lg">
                 Cada jornada é única. Os resultados podem variar de acordo com dedicação e cuidados individuais.
               </p>
             </div>
