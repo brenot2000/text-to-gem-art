@@ -25,44 +25,44 @@ const Index = () => {
               </div>
             </div>
             
-            <h1 className="text-7xl md:text-8xl font-bold mb-8 leading-tight">
-              <span className="bg-gradient-primary bg-clip-text text-transparent">
+            <h1 className="text-7xl md:text-8xl font-bold mb-8 leading-tight drop-shadow-lg">
+              <span className="bg-gradient-primary bg-clip-text text-transparent drop-shadow-sm">
                 Veja Sua Melhor
               </span>
               <br />
-              <span className="text-6xl md:text-7xl text-white drop-shadow-lg">
+              <span className="text-6xl md:text-7xl text-white drop-shadow-2xl">
                 Versão em 30 Dias
               </span>
             </h1>
             
-            <p className="text-2xl md:text-3xl text-white/90 max-w-4xl mx-auto mb-6 leading-relaxed font-light">
-              Imagine acordar todos os dias <span className="font-semibold text-white">se sentindo confiante</span> no seu próprio corpo
+            <p className="text-2xl md:text-3xl text-white max-w-4xl mx-auto mb-6 leading-relaxed font-medium drop-shadow-lg">
+              Imagine acordar todos os dias <span className="font-bold text-white bg-black/20 px-2 py-1 rounded-lg">se sentindo confiante</span> no seu próprio corpo
             </p>
 
-            <p className="text-xl text-white/80 max-w-3xl mx-auto mb-16 leading-relaxed">
+            <p className="text-xl text-white max-w-3xl mx-auto mb-16 leading-relaxed drop-shadow-lg bg-black/20 backdrop-blur-sm p-6 rounded-2xl border border-white/20">
               Nossa inteligência artificial exclusiva mostra exatamente como você ficaria com o corpo que sempre sonhou.
               <br />
-              <span className="font-semibold text-white">É 100% gratuito e leva apenas 30 segundos.</span>
+              <span className="font-bold text-white">É 100% gratuito e leva apenas 30 segundos.</span>
             </p>
 
             {/* Feature Pills */}
             <div className="flex flex-wrap justify-center items-center gap-6 mb-16">
-              <div className="glass-card px-6 py-3 rounded-full backdrop-blur-glass border border-white/20 bg-white/10">
+              <div className="glass-card px-8 py-4 rounded-full backdrop-blur-glass border border-white/40 bg-white/20 shadow-lg">
                 <div className="flex items-center gap-3 text-white">
-                  <Shield className="w-5 h-5" />
-                  <span className="font-medium">100% Privado & Seguro</span>
+                  <Shield className="w-6 h-6" />
+                  <span className="font-bold text-lg drop-shadow-sm">100% Privado & Seguro</span>
                 </div>
               </div>
-              <div className="glass-card px-6 py-3 rounded-full backdrop-blur-glass border border-white/20 bg-white/10">
+              <div className="glass-card px-8 py-4 rounded-full backdrop-blur-glass border border-white/40 bg-white/20 shadow-lg">
                 <div className="flex items-center gap-3 text-white">
-                  <Target className="w-5 h-5" />
-                  <span className="font-medium">Resultados Realistas</span>
+                  <Target className="w-6 h-6" />
+                  <span className="font-bold text-lg drop-shadow-sm">Resultados Realistas</span>
                 </div>
               </div>
-              <div className="glass-card px-6 py-3 rounded-full backdrop-blur-glass border border-white/20 bg-white/10">
+              <div className="glass-card px-8 py-4 rounded-full backdrop-blur-glass border border-white/40 bg-white/20 shadow-lg">
                 <div className="flex items-center gap-3 text-white">
-                  <Zap className="w-5 h-5" />
-                  <span className="font-medium">IA Avançada</span>
+                  <Zap className="w-6 h-6" />
+                  <span className="font-bold text-lg drop-shadow-sm">IA Avançada</span>
                 </div>
               </div>
             </div>
@@ -78,27 +78,27 @@ const Index = () => {
       <div className="container mx-auto px-6 py-20 relative z-10">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
-            <h2 className="text-4xl md:text-5xl font-bold mb-8 text-white">
+            <h2 className="text-4xl md:text-5xl font-bold mb-8 text-white drop-shadow-xl bg-black/20 backdrop-blur-sm px-8 py-4 rounded-2xl border border-white/30 inline-block">
               Milhares de mulheres já descobriram sua melhor versão
             </h2>
           </div>
           <div className="grid md:grid-cols-3 gap-8">
-            <Card className="glass-card backdrop-blur-glass border-white/20 bg-white/10 shadow-glass animate-slide-in-left">
+            <Card className="glass-card backdrop-blur-glass border-white/40 bg-white/25 shadow-glass animate-slide-in-left">
               <CardContent className="p-8 text-center">
-                <div className="text-5xl font-bold bg-gradient-warm bg-clip-text text-transparent mb-4">98%</div>
-                <p className="text-white/80 text-lg">Se sentem mais motivadas após ver o resultado</p>
+                <div className="text-5xl font-bold bg-gradient-warm bg-clip-text text-transparent mb-4 drop-shadow-sm">98%</div>
+                <p className="text-gray-800 text-lg font-semibold">Se sentem mais motivadas após ver o resultado</p>
               </CardContent>
             </Card>
-            <Card className="glass-card backdrop-blur-glass border-white/20 bg-white/10 shadow-glass animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+            <Card className="glass-card backdrop-blur-glass border-white/40 bg-white/25 shadow-glass animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
               <CardContent className="p-8 text-center">
-                <div className="text-5xl font-bold bg-gradient-accent bg-clip-text text-transparent mb-4">30s</div>
-                <p className="text-white/80 text-lg">É o tempo médio para gerar sua transformação</p>
+                <div className="text-5xl font-bold bg-gradient-accent bg-clip-text text-transparent mb-4 drop-shadow-sm">30s</div>
+                <p className="text-gray-800 text-lg font-semibold">É o tempo médio para gerar sua transformação</p>
               </CardContent>
             </Card>
-            <Card className="glass-card backdrop-blur-glass border-white/20 bg-white/10 shadow-glass animate-slide-in-right">
+            <Card className="glass-card backdrop-blur-glass border-white/40 bg-white/25 shadow-glass animate-slide-in-right">
               <CardContent className="p-8 text-center">
-                <div className="text-5xl font-bold bg-gradient-cool bg-clip-text text-transparent mb-4">+50k</div>
-                <p className="text-white/80 text-lg">Mulheres já visualizaram sua melhor versão</p>
+                <div className="text-5xl font-bold bg-gradient-cool bg-clip-text text-transparent mb-4 drop-shadow-sm">+50k</div>
+                <p className="text-gray-800 text-lg font-semibold">Mulheres já visualizaram sua melhor versão</p>
               </CardContent>
             </Card>
           </div>
@@ -119,10 +119,10 @@ const Index = () => {
                     <div className="absolute inset-0 rounded-full bg-gradient-secondary opacity-30 blur-xl animate-pulse-glow"></div>
                   </div>
                 </div>
-                <h3 className="text-3xl md:text-4xl font-bold mb-6 text-white">
+                <h3 className="text-3xl md:text-4xl font-bold mb-6 text-white drop-shadow-xl">
                   Como tirar a foto perfeita para melhores resultados
                 </h3>
-                <p className="text-white/80 text-xl">
+                <p className="text-white text-xl drop-shadow-lg bg-black/20 backdrop-blur-sm px-6 py-3 rounded-xl inline-block">
                   Siga estas dicas simples para obter uma transformação mais precisa
                 </p>
               </div>
@@ -132,32 +132,32 @@ const Index = () => {
                   <div className="p-6 rounded-full bg-gradient-primary shadow-brutal w-20 h-20 mx-auto flex items-center justify-center transform rotate-3">
                     <span className="text-3xl font-bold text-white">1</span>
                   </div>
-                  <h4 className="font-bold text-white text-xl">Corpo Completo</h4>
-                  <p className="text-white/70">Certifique-se de aparecer da cabeça aos pés na foto</p>
+                  <h4 className="font-bold text-white text-xl drop-shadow-lg">Corpo Completo</h4>
+                  <p className="text-white font-medium bg-black/20 backdrop-blur-sm px-4 py-2 rounded-lg">Certifique-se de aparecer da cabeça aos pés na foto</p>
                 </div>
                 
                 <div className="text-center space-y-4 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
                   <div className="p-6 rounded-full bg-gradient-secondary shadow-brutal w-20 h-20 mx-auto flex items-center justify-center transform -rotate-2">
                     <span className="text-3xl font-bold text-white">2</span>
                   </div>
-                  <h4 className="font-bold text-white text-xl">Rosto de Frente</h4>
-                  <p className="text-white/70">Olhe diretamente para a câmera com o rosto bem visível</p>
+                  <h4 className="font-bold text-white text-xl drop-shadow-lg">Rosto de Frente</h4>
+                  <p className="text-white font-medium bg-black/20 backdrop-blur-sm px-4 py-2 rounded-lg">Olhe diretamente para a câmera com o rosto bem visível</p>
                 </div>
                 
                 <div className="text-center space-y-4 animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
                   <div className="p-6 rounded-full bg-gradient-accent shadow-brutal w-20 h-20 mx-auto flex items-center justify-center transform rotate-1">
                     <span className="text-3xl font-bold text-white">3</span>
                   </div>
-                  <h4 className="font-bold text-white text-xl">Boa Iluminação</h4>
-                  <p className="text-white/70">Use luz natural ou ambiente bem iluminado</p>
+                  <h4 className="font-bold text-white text-xl drop-shadow-lg">Boa Iluminação</h4>
+                  <p className="text-white font-medium bg-black/20 backdrop-blur-sm px-4 py-2 rounded-lg">Use luz natural ou ambiente bem iluminado</p>
                 </div>
                 
                 <div className="text-center space-y-4 animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
                   <div className="p-6 rounded-full bg-gradient-warm shadow-brutal w-20 h-20 mx-auto flex items-center justify-center transform -rotate-1">
                     <span className="text-3xl font-bold text-white">4</span>
                   </div>
-                  <h4 className="font-bold text-white text-xl">Foto Nítida</h4>
-                  <p className="text-white/70">Evite fotos tremidas ou com baixa qualidade</p>
+                  <h4 className="font-bold text-white text-xl drop-shadow-lg">Foto Nítida</h4>
+                  <p className="text-white font-medium bg-black/20 backdrop-blur-sm px-4 py-2 rounded-lg">Evite fotos tremidas ou com baixa qualidade</p>
                 </div>
               </div>
             </CardContent>
