@@ -16,7 +16,7 @@ const DEFAULT_PROMPT = `Pegue esta foto e recrie a mesma pessoa em versão **100
 Regras principais:
 
 * **Barriga/Abdômen:** a barriga deve ser **reta, firme e lisa**, **sem nenhuma pochete, dobra, volume ou gordura abaixo do umbigo**. Não deixe nenhuma saliência na parte inferior da barriga. O abdômen deve parecer definido, atlético e saudável por baixo da roupa.
-* **Cintura:** bem fina, destacando a forma atlética.
+* **Cintura:** bem fina, destacando a forma atlética, deixando mais reta.
 * **Rosto:** afinado, mandíbula visível, pescoço alongado, bochechas menores.
 * **Braços e Ombros:** magros e tonificados.
 * **Peito:** firme, definido, sem gordura.
