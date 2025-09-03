@@ -25,12 +25,10 @@ const Index = () => {
               </div>
             </div>
             
-            <h1 className="text-7xl md:text-8xl font-bold mb-8 leading-tight">
-              <span className="bg-gradient-primary bg-clip-text text-transparent">
-                Veja Sua Melhor
-              </span>
+            <h1 className="text-7xl md:text-8xl font-bold mb-8 leading-tight text-white drop-shadow-lg">
+              Veja Sua Melhor
               <br />
-              <span className="text-6xl md:text-7xl text-white drop-shadow-lg">
+              <span className="text-6xl md:text-7xl">
                 Versão em 30 Dias
               </span>
             </h1>
