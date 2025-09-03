@@ -163,9 +163,9 @@ export const ImageGenerator = () => {
               <Camera className="w-6 h-6 text-accent-foreground" />
             </div>
           </div>
-          <CardTitle className="text-2xl font-bold">Transformação Fitness Premium</CardTitle>
+          <CardTitle className="text-2xl font-bold">Descubra Sua Melhor Versão</CardTitle>
           <p className="text-muted-foreground mt-2">
-            Envie sua foto e descubra como você ficaria com seu corpo dos sonhos
+            Envie sua foto e veja como você ficaria com o corpo que sempre sonhou
           </p>
         </CardHeader>
         <CardContent className="space-y-6">
@@ -180,7 +180,7 @@ export const ImageGenerator = () => {
                   Faça o upload da sua foto
                 </h3>
                 <p className="text-sm text-muted-foreground mb-6 max-w-sm mx-auto">
-                  Escolha uma foto nítida onde você aparece de corpo inteiro para melhores resultados
+                  Siga o tutorial acima para uma foto perfeita e resultados mais precisos
                 </p>
                 <Input
                   id="referenceImage"
@@ -266,10 +266,10 @@ export const ImageGenerator = () => {
               </div>
             </div>
             <CardTitle className="text-2xl font-bold bg-gradient-luxury bg-clip-text text-transparent">
-              Sua Transformação Incrível
+              Sua Melhor Versão Revelada
             </CardTitle>
             <p className="text-muted-foreground mt-2">
-              Compare seu antes e depois - veja como você ficaria em 30 dias!
+              Compare e veja a diferença - esta poderia ser você em 30 dias!
             </p>
           </CardHeader>
           <CardContent>
@@ -307,13 +307,16 @@ export const ImageGenerator = () => {
               </div>
             </div>
 
-            <div className="text-center mt-8 p-6 bg-gradient-accent rounded-2xl shadow-soft">
-              <h4 className="text-lg font-semibold mb-2 text-accent-foreground">
-                ✨ Incrível transformação!
+            <div className="text-center mt-8 p-8 bg-gradient-luxury rounded-2xl shadow-glow text-white">
+              <h4 className="text-2xl font-bold mb-4">
+                ✨ Sabia que nós podemos te ajudar a ter esse resultado?
               </h4>
-              <p className="text-accent-foreground/80">
-                Esta é uma visualização de como você poderia ficar com dedicação e os cuidados certos.
-                Cada jornada é única e os resultados podem variar.
+              <p className="text-white/90 text-lg leading-relaxed mb-4">
+                Esta visualização mostra seu potencial real. Com o acompanhamento certo, 
+                você pode transformar essa visão em realidade.
+              </p>
+              <p className="text-white/80 text-sm">
+                Cada jornada é única. Os resultados podem variar de acordo com dedicação e cuidados individuais.
               </p>
             </div>
           </CardContent>
