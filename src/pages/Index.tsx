@@ -166,8 +166,7 @@ const Index = () => {
       {/* Footer */}
       <div className="text-center py-16 text-white/60 border-t border-white/20 bg-black/20 backdrop-blur-glass relative z-10">
         <div className="container mx-auto px-6">
-          <p className="mb-2 text-lg">Powered by Advanced AI Technology</p>
-          <p className="text-sm">Seus dados são processados com total segurança e privacidade</p>
+          <p className="text-lg">Criado e desenvolvido por Breno Santos</p>
         </div>
       </div>
     </div>
