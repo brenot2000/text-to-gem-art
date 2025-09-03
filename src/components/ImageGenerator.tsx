@@ -166,23 +166,23 @@ export const ImageGenerator = () => {
               <div className="absolute inset-0 rounded-full bg-gradient-accent opacity-30 blur-xl animate-pulse-glow"></div>
             </div>
           </div>
-          <CardTitle className="text-3xl md:text-4xl font-bold text-white mb-4 drop-shadow-xl">Descubra Sua Melhor Versão</CardTitle>
-          <p className="text-white text-xl drop-shadow-lg bg-black/20 backdrop-blur-sm px-6 py-3 rounded-xl inline-block">
+          <CardTitle className="text-3xl md:text-4xl font-bold text-white mb-4">Descubra Sua Melhor Versão</CardTitle>
+          <p className="text-white/80 text-xl">
             Envie sua foto e veja como você ficaria com o corpo que sempre sonhou
           </p>
         </CardHeader>
         <CardContent className="space-y-8 p-8">
           <div className="space-y-6">
-            <Label htmlFor="referenceImage" className="text-2xl font-bold text-white drop-shadow-lg">Sua Foto Atual</Label>
+            <Label htmlFor="referenceImage" className="text-2xl font-bold text-white">Sua Foto Atual</Label>
             {!referenceImage ? (
               <div className="border-2 border-dashed border-white/30 rounded-3xl p-12 text-center bg-white/5 hover:border-white/50 hover:bg-white/10 transition-all duration-500 group">
                 <div className="animate-float-smooth group-hover:scale-110 transition-transform duration-500">
                   <Upload className="mx-auto h-16 w-16 text-white mb-6" />
                 </div>
-                <h3 className="text-2xl font-bold mb-4 text-white drop-shadow-lg">
+                <h3 className="text-2xl font-bold mb-4 text-white">
                   Faça o upload da sua foto
                 </h3>
-                <p className="text-lg text-white mb-8 max-w-md mx-auto leading-relaxed font-medium bg-black/20 backdrop-blur-sm px-4 py-3 rounded-lg">
+                <p className="text-lg text-white/70 mb-8 max-w-md mx-auto leading-relaxed">
                   Siga o tutorial acima para uma foto perfeita e resultados mais precisos
                 </p>
                 <Input
@@ -216,11 +216,11 @@ export const ImageGenerator = () => {
                     </div>
                   </div>
                   <div className="flex-1">
-                    <h4 className="text-2xl font-bold text-white mb-3 drop-shadow-lg">Foto carregada com sucesso!</h4>
-                    <p className="text-lg text-white mb-2 font-medium">
+                    <h4 className="text-2xl font-bold text-white mb-3">Foto carregada com sucesso!</h4>
+                    <p className="text-lg text-white/80 mb-2">
                       {referenceFile?.name}
                     </p>
-                    <p className="text-white font-medium">
+                    <p className="text-white/60">
                       Tamanho: {Math.round((referenceFile?.size || 0) / 1024)}KB
                     </p>
                   </div>
@@ -271,10 +271,10 @@ export const ImageGenerator = () => {
                 <div className="absolute inset-0 rounded-full bg-gradient-warm opacity-30 blur-xl animate-pulse-glow"></div>
               </div>
             </div>
-            <CardTitle className="text-3xl md:text-4xl font-bold bg-gradient-warm bg-clip-text text-transparent mb-4 drop-shadow-sm">
+            <CardTitle className="text-3xl md:text-4xl font-bold bg-gradient-warm bg-clip-text text-transparent mb-4">
               Sua Melhor Versão Revelada
             </CardTitle>
-            <p className="text-white text-xl drop-shadow-lg bg-black/20 backdrop-blur-sm px-6 py-3 rounded-xl inline-block">
+            <p className="text-white/80 text-xl">
               Compare e veja a diferença - esta poderia ser você em 30 dias!
             </p>
           </CardHeader>
@@ -283,7 +283,7 @@ export const ImageGenerator = () => {
               {/* Before Image */}
               <div className="space-y-6 animate-slide-in-left">
                 <div className="text-center">
-                  <h3 className="text-2xl font-bold text-white mb-4 drop-shadow-lg bg-black/30 backdrop-blur-sm px-4 py-2 rounded-lg">ANTES</h3>
+                  <h3 className="text-2xl font-bold text-white/70 mb-4">ANTES</h3>
                   <div className="w-24 h-1 bg-white/30 mx-auto rounded-full"></div>
                 </div>
                 <div className="relative group">
@@ -299,7 +299,7 @@ export const ImageGenerator = () => {
               {/* After Image */}
               <div className="space-y-6 animate-slide-in-right">
                 <div className="text-center">
-                  <h3 className="text-2xl font-bold bg-gradient-warm bg-clip-text text-transparent mb-4 drop-shadow-sm bg-white/20 backdrop-blur-sm px-4 py-2 rounded-lg">DEPOIS</h3>
+                  <h3 className="text-2xl font-bold bg-gradient-warm bg-clip-text text-transparent mb-4">DEPOIS</h3>
                   <div className="w-24 h-1 bg-gradient-warm mx-auto rounded-full shadow-glow"></div>
                 </div>
                 <div className="relative group">
@@ -313,15 +313,15 @@ export const ImageGenerator = () => {
               </div>
             </div>
 
-            <div className="text-center mt-12 p-10 bg-black/40 backdrop-blur-md rounded-3xl shadow-intense animate-fade-in-up border border-white/30" style={{ animationDelay: '0.5s' }}>
-              <h4 className="text-3xl md:text-4xl font-bold mb-6 text-white drop-shadow-xl">
+            <div className="text-center mt-12 p-10 bg-gradient-hero rounded-3xl shadow-intense animate-fade-in-up" style={{ animationDelay: '0.5s' }}>
+              <h4 className="text-3xl md:text-4xl font-bold mb-6 text-white">
                 ✨ Sabia que nós podemos te ajudar a ter esse resultado?
               </h4>
-              <p className="text-white text-xl leading-relaxed mb-6 max-w-3xl mx-auto font-medium">
+              <p className="text-white/90 text-xl leading-relaxed mb-6 max-w-3xl mx-auto">
                 Esta visualização mostra seu potencial real. Com o acompanhamento certo, 
                 você pode transformar essa visão em realidade.
               </p>
-              <p className="text-white text-lg font-medium">
+              <p className="text-white/70 text-lg">
                 Cada jornada é única. Os resultados podem variar de acordo com dedicação e cuidados individuais.
               </p>
             </div>
