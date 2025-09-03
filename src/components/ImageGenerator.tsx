@@ -120,7 +120,7 @@ export const ImageGenerator = () => {
     }));
   };
 
-  const generateImage = async () => {
+  const generateImage = async (retryCount = 0) => {
     if (!referenceFile) {
       toast.error("Por favor, selecione uma imagem de referência");
       return;
@@ -130,10 +130,14 @@ export const ImageGenerator = () => {
     setGeneratedImage(null);
 
     try {
-      // Prepare parts array
+      // Prepare parts array with more specific prompt for image generation
+      const enhancedPrompt = `${DEFAULT_PROMPT}
+
+IMPORTANTE: Você DEVE gerar uma imagem transformada, não apenas texto. Crie uma imagem visual mostrando a pessoa com as transformações solicitadas.`;
+
       const parts: any[] = [
         {
-          text: DEFAULT_PROMPT,
+          text: enhancedPrompt,
         }
       ];
 
@@ -159,15 +163,22 @@ export const ImageGenerator = () => {
                 parts: parts,
               },
             ],
+            generationConfig: {
+              temperature: 0.8,
+              maxOutputTokens: 4096,
+            }
           }),
         }
       );
 
       if (!response.ok) {
-        throw new Error(`Erro na API: ${response.status}`);
+        const errorText = await response.text();
+        console.error("Erro da API:", response.status, errorText);
+        throw new Error(`Erro na API: ${response.status} - ${errorText}`);
       }
 
       const data = await response.json();
+      console.log("Resposta da API:", data);
       
       // Verifica se há dados de imagem na resposta
       if (data.candidates && data.candidates[0]?.content?.parts) {
@@ -175,21 +186,48 @@ export const ImageGenerator = () => {
           (part: any) => part.inlineData?.mimeType?.startsWith("image/")
         );
         
-        if (imagePart) {
+        if (imagePart && imagePart.inlineData?.data) {
           const imageUrl = `data:${imagePart.inlineData.mimeType};base64,${imagePart.inlineData.data}`;
           setGeneratedImage(imageUrl);
           toast.success("Imagem gerada com sucesso!");
+          return;
+        }
+        
+        // Se não encontrou imagem, tenta novamente (máximo 3 tentativas)
+        if (retryCount < 2) {
+          console.log(`Tentativa ${retryCount + 1} não retornou imagem. Tentando novamente...`);
+          toast.info(`Processando... Tentativa ${retryCount + 2}/3`);
+          setTimeout(() => generateImage(retryCount + 1), 1000);
+          return;
         } else {
-          throw new Error("Nenhuma imagem foi retornada pela API");
+          throw new Error("A API não conseguiu gerar uma imagem após 3 tentativas. Tente novamente com uma foto diferente.");
         }
       } else {
         throw new Error("Resposta inesperada da API");
       }
     } catch (error) {
       console.error("Erro ao gerar imagem:", error);
-      toast.error("Erro ao gerar imagem. Verifique sua API Key e tente novamente.");
+      
+      // Mensagem de erro mais específica
+      if (error instanceof Error) {
+        if (error.message.includes("após 3 tentativas")) {
+          toast.error(error.message);
+        } else if (error.message.includes("Erro na API: 400")) {
+          toast.error("Formato de imagem não suportado. Tente com uma foto diferente.");
+        } else if (error.message.includes("Erro na API: 429")) {
+          toast.error("Muitas tentativas. Aguarde um momento e tente novamente.");
+        } else if (error.message.includes("Erro na API: 403")) {
+          toast.error("Problema com a chave da API. Entre em contato com o suporte.");
+        } else {
+          toast.error("Erro ao gerar imagem. Tente novamente em alguns segundos.");
+        }
+      } else {
+        toast.error("Erro inesperado. Tente novamente.");
+      }
     } finally {
-      setIsLoading(false);
+      if (retryCount === 0) { // Só finaliza loading na última tentativa
+        setIsLoading(false);
+      }
     }
   };
 
