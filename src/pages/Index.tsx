@@ -16,15 +16,15 @@ const Index = () => {
       <div className="relative">
         <div className="container mx-auto px-6 py-24 text-center relative z-10">
           <div className="animate-fade-in-up max-w-5xl mx-auto">
-            <h1 className="text-7xl md:text-8xl font-bold mb-8 leading-tight text-white drop-shadow-lg">
+            <h1 className="text-6xl md:text-7xl font-bold mb-8 leading-tight text-white drop-shadow-lg">
               Se veja mais magra com
               <br />
-              <span className="text-6xl md:text-7xl">
+              <span className="text-7xl md:text-8xl bg-gradient-primary bg-clip-text text-transparent">
                 inteligência artificial
               </span>
               <br />
-              <span className="text-5xl md:text-6xl">
-                resultado de 30 dias com a beautyness.club
+              <span className="text-4xl md:text-5xl font-light">
+                resultado de 30 dias com a <span className="font-bold">beautyness.club</span>
               </span>
             </h1>
             
