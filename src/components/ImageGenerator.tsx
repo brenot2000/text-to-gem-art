@@ -160,10 +160,9 @@ export const ImageGenerator = () => {
         <CardHeader className="text-center pb-8">
           <div className="flex justify-center mb-6">
             <div className="relative">
-              <div className="p-4 rounded-full bg-gradient-accent shadow-glow animate-pulse-glow">
+              <div className="p-4 rounded-full bg-gradient-accent shadow-glow">
                 <Camera className="w-8 h-8 text-white" />
               </div>
-              <div className="absolute inset-0 rounded-full bg-gradient-accent opacity-30 blur-xl animate-pulse-glow"></div>
             </div>
           </div>
           <CardTitle className="text-3xl md:text-4xl font-bold text-white mb-4">Descubra Sua Melhor Versão</CardTitle>
@@ -195,7 +194,7 @@ export const ImageGenerator = () => {
                 <Button
                   type="button"
                   size="lg"
-                  className="bg-gradient-primary shadow-intense hover:shadow-glow transition-all duration-300 text-lg px-8 py-4 h-auto animate-pulse-glow"
+                  className="bg-gradient-primary shadow-intense hover:shadow-glow transition-all duration-300 text-lg px-8 py-4 h-auto animate-glow-border"
                   onClick={() => document.getElementById('referenceImage')?.click()}
                 >
                   <Upload className="w-6 h-6 mr-3" />
@@ -242,7 +241,7 @@ export const ImageGenerator = () => {
             onClick={generateImage}
             disabled={isLoading || !referenceFile}
             size="lg"
-            className="w-full bg-gradient-hero shadow-intense hover:shadow-glow transition-all duration-500 text-xl px-8 py-6 h-auto animate-pulse-glow disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full bg-gradient-hero shadow-intense hover:shadow-glow transition-all duration-500 text-xl px-8 py-6 h-auto animate-glow-border disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isLoading ? (
               <>
@@ -264,12 +263,11 @@ export const ImageGenerator = () => {
         <Card className="glass-card backdrop-blur-glass border-white/20 bg-white/10 shadow-intense animate-fade-in-up">
           <CardHeader className="text-center pb-8">
             <div className="flex justify-center mb-6">
-              <div className="relative">
-                <div className="p-4 rounded-full bg-gradient-warm shadow-glow animate-pulse-glow">
-                  <Sparkles className="w-8 h-8 text-white" />
-                </div>
-                <div className="absolute inset-0 rounded-full bg-gradient-warm opacity-30 blur-xl animate-pulse-glow"></div>
+            <div className="relative">
+              <div className="p-4 rounded-full bg-gradient-warm shadow-glow">
+                <Sparkles className="w-8 h-8 text-white" />
               </div>
+            </div>
             </div>
             <CardTitle className="text-3xl md:text-4xl font-bold bg-gradient-warm bg-clip-text text-transparent mb-4">
               Sua Melhor Versão Revelada
