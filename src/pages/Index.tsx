@@ -19,7 +19,7 @@ const Index = () => {
             <h1 className="text-6xl md:text-7xl font-bold mb-8 leading-tight text-white drop-shadow-lg">
               Se veja mais magra com
               <br />
-              <span className="text-7xl md:text-8xl bg-gradient-primary bg-clip-text text-transparent">
+              <span className="text-7xl md:text-8xl text-white">
                 inteligência artificial
               </span>
               <br />
@@ -29,7 +29,7 @@ const Index = () => {
             </h1>
             
             <p className="text-2xl md:text-3xl text-white/90 max-w-4xl mx-auto mb-6 leading-relaxed font-light">
-              Imagine acordar todos os dias <span className="font-semibold text-white">se sentindo confiante</span> no seu próprio corpo
+              Basta <span className="font-semibold text-white">enviar uma imagem</span> que nossa IA mostrará o resultado
             </p>
 
             <p className="text-xl text-white/80 max-w-3xl mx-auto mb-16 leading-relaxed">
