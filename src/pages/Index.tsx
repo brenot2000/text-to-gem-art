@@ -17,10 +17,14 @@ const Index = () => {
         <div className="container mx-auto px-6 py-24 text-center relative z-10">
           <div className="animate-fade-in-up max-w-5xl mx-auto">
             <h1 className="text-7xl md:text-8xl font-bold mb-8 leading-tight text-white drop-shadow-lg">
-              Inteligência artificial te mostra
+              Se veja mais magra com
               <br />
               <span className="text-6xl md:text-7xl">
-                sua versão mais magra
+                inteligência artificial
+              </span>
+              <br />
+              <span className="text-5xl md:text-6xl">
+                resultado de 30 dias com a beautyness.club
               </span>
             </h1>
             
