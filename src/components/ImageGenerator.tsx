@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -10,8 +9,22 @@ import { toast } from "sonner";
 // API Key padrão do Google Gemini
 const DEFAULT_API_KEY = "AIzaSyCT7Og4oj9ChYgTKIqLF8BIhcUeZSn8naU";
 
+// Prompt padrão fixo para transformação fitness
+const DEFAULT_PROMPT = `Pegue esta foto e recrie a mesma pessoa em versão **100% magra, atlética e fitness**, mantendo o mesmo rosto e as mesmas roupas originais.
+
+Regras principais:
+
+* **Barriga/Abdômen:** a barriga deve ser **reta, firme e lisa**, **sem nenhuma pochete, dobra, volume ou gordura abaixo do umbigo**. Não deixe nenhuma saliência na parte inferior da barriga. O abdômen deve parecer definido, atlético e saudável por baixo da roupa.
+* **Cintura:** bem fina, destacando a forma atlética.
+* **Rosto:** afinado, mandíbula visível, pescoço alongado, bochechas menores.
+* **Braços e Ombros:** magros e tonificados.
+* **Peito:** firme, definido, sem gordura.
+* **Quadris e Pernas:** mais magros e definidos, pernas atléticas.
+* **Postura:** ereta, confiante, atlética.
+* **Roupas:** mantenha exatamente as roupas originais, sem mudar cor ou estilo. Apenas ajuste o caimento para o corpo magro. **Nunca invente novas roupas e nunca exponha pele.**
+* **Resultado:** fotorealista, com transformação clara: corpo magro, atlético, barriga reta e sem nenhuma gordura acumulada.`;
+
 export const ImageGenerator = () => {
-  const [prompt, setPrompt] = useState("");
   const [generatedImage, setGeneratedImage] = useState<string | null>(null);
   const [referenceImage, setReferenceImage] = useState<string | null>(null);
   const [referenceFile, setReferenceFile] = useState<File | null>(null);
@@ -68,8 +81,8 @@ export const ImageGenerator = () => {
   };
 
   const generateImage = async () => {
-    if (!prompt.trim()) {
-      toast.error("Por favor, digite uma descrição para a imagem");
+    if (!referenceFile) {
+      toast.error("Por favor, selecione uma imagem de referência");
       return;
     }
 
@@ -80,20 +93,18 @@ export const ImageGenerator = () => {
       // Prepare parts array
       const parts: any[] = [
         {
-          text: prompt,
+          text: DEFAULT_PROMPT,
         }
       ];
 
-      // Add reference image if available
-      if (referenceFile) {
-        const { data, mimeType } = await convertImageToBase64(referenceFile);
-        parts.push({
-          inlineData: {
-            mimeType,
-            data
-          }
-        });
-      }
+      // Add reference image
+      const { data: imageData, mimeType } = await convertImageToBase64(referenceFile);
+      parts.push({
+        inlineData: {
+          mimeType,
+          data: imageData
+        }
+      });
 
       const response = await fetch(
         `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image-preview:generateContent?key=${DEFAULT_API_KEY}`,
@@ -146,16 +157,16 @@ export const ImageGenerator = () => {
     <div className="max-w-2xl mx-auto p-6 space-y-6">
       <Card>
         <CardHeader>
-          <CardTitle>Gerador de Imagem com Google Gemini</CardTitle>
+          <CardTitle>Transformação Fitness com IA</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="referenceImage">Imagem de Referência (Opcional)</Label>
+            <Label htmlFor="referenceImage">Sua Imagem</Label>
             {!referenceImage ? (
               <div className="border-2 border-dashed border-border rounded-lg p-6 text-center">
                 <Upload className="mx-auto h-8 w-8 text-muted-foreground mb-2" />
                 <p className="text-sm text-muted-foreground mb-2">
-                  Clique para selecionar uma imagem de referência
+                  Faça upload da sua foto para transformação fitness
                 </p>
                 <Input
                   id="referenceImage"
@@ -181,7 +192,7 @@ export const ImageGenerator = () => {
                     className="w-24 h-24 object-cover rounded-md border"
                   />
                   <div className="flex-1">
-                    <p className="text-sm font-medium">Imagem de referência carregada</p>
+                    <p className="text-sm font-medium">Imagem carregada</p>
                     <p className="text-xs text-muted-foreground">
                       {referenceFile?.name} ({Math.round((referenceFile?.size || 0) / 1024)}KB)
                     </p>
@@ -200,32 +211,18 @@ export const ImageGenerator = () => {
             )}
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="prompt">Descrição da Imagem</Label>
-            <Textarea
-              id="prompt"
-              placeholder={referenceImage 
-                ? "Descreva como modificar a imagem de referência..." 
-                : "Descreva a imagem que você quer gerar..."
-              }
-              value={prompt}
-              onChange={(e) => setPrompt(e.target.value)}
-              rows={3}
-            />
-          </div>
-
           <Button
             onClick={generateImage}
-            disabled={isLoading || !prompt.trim()}
+            disabled={isLoading || !referenceFile}
             className="w-full"
           >
             {isLoading ? (
               <>
                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                Gerando Imagem...
+                Transformando...
               </>
             ) : (
-              "Gerar Imagem"
+              "Transformar em Versão Fitness"
             )}
           </Button>
         </CardContent>
@@ -234,7 +231,7 @@ export const ImageGenerator = () => {
       {generatedImage && (
         <Card>
           <CardHeader>
-            <CardTitle>Imagem Gerada</CardTitle>
+            <CardTitle>Resultado da Transformação</CardTitle>
           </CardHeader>
           <CardContent>
             <img
