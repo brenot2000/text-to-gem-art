@@ -7,9 +7,9 @@ const Index = () => {
     <div className="min-h-screen bg-gradient-hero relative overflow-hidden">
       {/* Floating background elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 left-20 w-72 h-72 bg-gradient-accent rounded-full opacity-20 blur-3xl animate-float-smooth"></div>
-        <div className="absolute top-60 right-20 w-96 h-96 bg-gradient-warm rounded-full opacity-15 blur-3xl animate-float-smooth" style={{ animationDelay: '2s' }}></div>
-        <div className="absolute bottom-40 left-40 w-80 h-80 bg-gradient-cool rounded-full opacity-20 blur-3xl animate-float-smooth" style={{ animationDelay: '4s' }}></div>
+        <div className="absolute top-20 left-20 w-72 h-72 bg-gradient-accent rounded-full opacity-30 blur-3xl animate-float-smooth"></div>
+        <div className="absolute top-60 right-20 w-96 h-96 bg-gradient-warm rounded-full opacity-25 blur-3xl animate-float-smooth" style={{ animationDelay: '2s' }}></div>
+        <div className="absolute bottom-40 left-40 w-80 h-80 bg-gradient-cool rounded-full opacity-30 blur-3xl animate-float-smooth" style={{ animationDelay: '4s' }}></div>
       </div>
 
       {/* Hero Section */}
