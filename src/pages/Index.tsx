@@ -68,7 +68,7 @@ const Index = () => {
       </div>
 
       {/* Example Result Section */}
-      <div className="container mx-auto px-6 py-20 relative z-10">
+      <div className="container mx-auto px-6 py-8 relative z-10">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-12 text-white animate-fade-in-up">
             Veja um exemplo real de resultado
