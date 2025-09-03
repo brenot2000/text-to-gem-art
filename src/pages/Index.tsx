@@ -16,20 +16,11 @@ const Index = () => {
       <div className="relative">
         <div className="container mx-auto px-6 py-24 text-center relative z-10">
           <div className="animate-fade-in-up max-w-5xl mx-auto">
-            <div className="flex justify-center mb-8">
-              <div className="relative">
-                <div className="p-8 rounded-full bg-gradient-primary shadow-glow animate-pulse-glow">
-                  <Sparkles className="w-16 h-16 text-white" />
-                </div>
-                <div className="absolute inset-0 rounded-full bg-gradient-primary opacity-30 blur-xl animate-pulse-glow"></div>
-              </div>
-            </div>
-            
             <h1 className="text-7xl md:text-8xl font-bold mb-8 leading-tight text-white drop-shadow-lg">
-              Veja Sua Melhor
+              Inteligência artificial te mostra
               <br />
               <span className="text-6xl md:text-7xl">
-                Versão em 30 Dias
+                sua versão mais magra
               </span>
             </h1>
             
