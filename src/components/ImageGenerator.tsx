@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Loader2, Upload, X, Camera, Sparkles, Zap } from "lucide-react";
 import { toast } from "sonner";
 
@@ -29,6 +30,12 @@ export const ImageGenerator = () => {
   const [referenceImage, setReferenceImage] = useState<string | null>(null);
   const [referenceFile, setReferenceFile] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [showDataForm, setShowDataForm] = useState(false);
+  const [userData, setUserData] = useState({
+    name: '',
+    email: '',
+    phone: ''
+  });
 
   const convertImageToBase64 = (file: File): Promise<{ data: string; mimeType: string }> => {
     return new Promise((resolve, reject) => {
@@ -78,6 +85,39 @@ export const ImageGenerator = () => {
     }
     setReferenceImage(null);
     setReferenceFile(null);
+  };
+
+  const handleShowDataForm = () => {
+    if (!referenceFile) {
+      toast.error("Por favor, selecione uma imagem de referência");
+      return;
+    }
+    setShowDataForm(true);
+  };
+
+  const handleSubmitDataForm = async () => {
+    if (!userData.name || !userData.email || !userData.phone) {
+      toast.error("Por favor, preencha todos os campos");
+      return;
+    }
+
+    // Validação básica de email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(userData.email)) {
+      toast.error("Por favor, insira um email válido");
+      return;
+    }
+
+    console.log("Dados capturados:", userData);
+    setShowDataForm(false);
+    await generateImage();
+  };
+
+  const handleUserDataChange = (field: string, value: string) => {
+    setUserData(prev => ({
+      ...prev,
+      [field]: value
+    }));
   };
 
   const generateImage = async () => {
@@ -238,7 +278,7 @@ export const ImageGenerator = () => {
           </div>
 
           <Button
-            onClick={generateImage}
+            onClick={handleShowDataForm}
             disabled={isLoading || !referenceFile}
             size="lg"
             className="w-full bg-gradient-hero shadow-intense hover:shadow-glow transition-all duration-500 text-xl px-8 py-6 h-auto animate-glow-border disabled:opacity-50 disabled:cursor-not-allowed"
@@ -325,6 +365,84 @@ export const ImageGenerator = () => {
           </CardContent>
         </Card>
       )}
+
+      {/* Data Collection Dialog */}
+      <Dialog open={showDataForm} onOpenChange={setShowDataForm}>
+        <DialogContent className="glass-card backdrop-blur-glass border-white/20 bg-white/10 shadow-intense max-w-md animate-scale-in">
+          <DialogHeader className="text-center pb-2">
+            <div className="flex justify-center mb-4">
+              <div className="relative">
+                <div className="p-3 rounded-full bg-gradient-accent shadow-glow">
+                  <Sparkles className="w-6 h-6 text-white" />
+                </div>
+              </div>
+            </div>
+            <DialogTitle className="text-2xl font-bold text-white mb-2">
+              Informe seus dados para ver o resultado gratuitamente
+            </DialogTitle>
+            <p className="text-white/70 text-sm">
+              Seus dados são seguros e privados conosco
+            </p>
+          </DialogHeader>
+          <div className="space-y-6 pt-6">
+            <div className="space-y-3">
+              <Label htmlFor="userName" className="text-sm font-medium text-white">
+                Nome completo
+              </Label>
+              <Input
+                id="userName"
+                type="text"
+                placeholder="Seu nome completo"
+                value={userData.name}
+                onChange={(e) => handleUserDataChange('name', e.target.value)}
+                className="bg-white/10 border-white/30 text-white placeholder:text-white/50 focus:border-white/50 focus:bg-white/15 backdrop-blur-sm h-12"
+              />
+            </div>
+            <div className="space-y-3">
+              <Label htmlFor="userEmail" className="text-sm font-medium text-white">
+                Email
+              </Label>
+              <Input
+                id="userEmail"
+                type="email"
+                placeholder="seu@email.com"
+                value={userData.email}
+                onChange={(e) => handleUserDataChange('email', e.target.value)}
+                className="bg-white/10 border-white/30 text-white placeholder:text-white/50 focus:border-white/50 focus:bg-white/15 backdrop-blur-sm h-12"
+              />
+            </div>
+            <div className="space-y-3">
+              <Label htmlFor="userPhone" className="text-sm font-medium text-white">
+                Telefone/WhatsApp
+              </Label>
+              <Input
+                id="userPhone"
+                type="tel"
+                placeholder="(11) 99999-9999"
+                value={userData.phone}
+                onChange={(e) => handleUserDataChange('phone', e.target.value)}
+                className="bg-white/10 border-white/30 text-white placeholder:text-white/50 focus:border-white/50 focus:bg-white/15 backdrop-blur-sm h-12"
+              />
+            </div>
+            <div className="flex gap-4 pt-6">
+              <Button
+                variant="outline"
+                onClick={() => setShowDataForm(false)}
+                className="flex-1 border-white/30 bg-white/10 hover:bg-white/20 text-white backdrop-blur-sm h-12"
+              >
+                Cancelar
+              </Button>
+              <Button
+                onClick={handleSubmitDataForm}
+                className="flex-1 bg-gradient-hero shadow-intense hover:shadow-glow transition-all duration-300 animate-glow-border h-12 text-white font-semibold"
+              >
+                <Zap className="w-4 h-4 mr-2" />
+                Gerar Resultado
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

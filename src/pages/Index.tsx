@@ -67,6 +67,22 @@ const Index = () => {
         </div>
       </div>
 
+      {/* Example Result Section */}
+      <div className="container mx-auto px-6 py-8 relative z-10">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-3xl md:text-4xl font-bold mb-12 text-white animate-fade-in-up">
+            Veja um exemplo real de resultado
+          </h2>
+          <div className="animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+            <img 
+              src="/lovable-uploads/35df97ed-1871-47d7-bfef-6ba2a1f506e5.png" 
+              alt="Exemplo real de transformação - antes e depois"
+              className="w-full max-w-4xl mx-auto rounded-3xl shadow-intense border-2 border-white/20"
+            />
+          </div>
+        </div>
+      </div>
+
       {/* Social Proof Section */}
       <div className="container mx-auto px-6 py-20 relative z-10">
         <div className="max-w-6xl mx-auto">
@@ -166,8 +182,7 @@ const Index = () => {
       {/* Footer */}
       <div className="text-center py-16 text-white/60 border-t border-white/20 bg-black/20 backdrop-blur-glass relative z-10">
         <div className="container mx-auto px-6">
-          <p className="mb-2 text-lg">Powered by Advanced AI Technology</p>
-          <p className="text-sm">Seus dados são processados com total segurança e privacidade</p>
+          <p className="text-lg">Criado e desenvolvido por Breno Santos</p>
         </div>
       </div>
     </div>
