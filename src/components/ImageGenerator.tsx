@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { Loader2, Upload, X } from "lucide-react";
+import { Loader2, Upload, X, Camera, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 
 // API Key padrão do Google Gemini
@@ -154,19 +154,33 @@ export const ImageGenerator = () => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-6 space-y-6">
-      <Card>
-        <CardHeader>
-          <CardTitle>Transformação Fitness com IA</CardTitle>
+    <div className="max-w-4xl mx-auto space-y-8">
+      {/* Upload Section */}
+      <Card className="shadow-luxury border-0 bg-card/50 backdrop-blur-sm">
+        <CardHeader className="text-center pb-8">
+          <div className="flex justify-center mb-4">
+            <div className="p-3 rounded-full bg-gradient-accent shadow-soft">
+              <Camera className="w-6 h-6 text-accent-foreground" />
+            </div>
+          </div>
+          <CardTitle className="text-2xl font-bold">Transformação Fitness Premium</CardTitle>
+          <p className="text-muted-foreground mt-2">
+            Envie sua foto e descubra como você ficaria com seu corpo dos sonhos
+          </p>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="referenceImage">Sua Imagem</Label>
+        <CardContent className="space-y-6">
+          <div className="space-y-4">
+            <Label htmlFor="referenceImage" className="text-lg font-semibold">Sua Foto Atual</Label>
             {!referenceImage ? (
-              <div className="border-2 border-dashed border-border rounded-lg p-6 text-center">
-                <Upload className="mx-auto h-8 w-8 text-muted-foreground mb-2" />
-                <p className="text-sm text-muted-foreground mb-2">
-                  Faça upload da sua foto para transformação fitness
+              <div className="border-2 border-dashed border-primary/30 rounded-2xl p-8 text-center bg-gradient-soft hover:border-primary/50 transition-all duration-300">
+                <div className="animate-float">
+                  <Upload className="mx-auto h-12 w-12 text-primary mb-4" />
+                </div>
+                <h3 className="text-lg font-semibold mb-2 text-foreground">
+                  Faça o upload da sua foto
+                </h3>
+                <p className="text-sm text-muted-foreground mb-6 max-w-sm mx-auto">
+                  Escolha uma foto nítida onde você aparece de corpo inteiro para melhores resultados
                 </p>
                 <Input
                   id="referenceImage"
@@ -177,24 +191,34 @@ export const ImageGenerator = () => {
                 />
                 <Button
                   type="button"
-                  variant="outline"
+                  size="lg"
+                  className="bg-gradient-luxury shadow-luxury hover:shadow-glow transition-all duration-300"
                   onClick={() => document.getElementById('referenceImage')?.click()}
                 >
-                  Selecionar Imagem
+                  <Upload className="w-5 h-5 mr-2" />
+                  Escolher Foto
                 </Button>
               </div>
             ) : (
-              <div className="relative border rounded-lg p-4">
-                <div className="flex items-start gap-4">
-                  <img
-                    src={referenceImage}
-                    alt="Imagem de referência"
-                    className="w-24 h-24 object-cover rounded-md border"
-                  />
+              <div className="relative border-2 border-primary/20 rounded-2xl p-6 bg-gradient-soft">
+                <div className="flex items-start gap-6">
+                  <div className="relative">
+                    <img
+                      src={referenceImage}
+                      alt="Sua foto atual"
+                      className="w-32 h-32 object-cover rounded-xl shadow-soft border-2 border-primary/20"
+                    />
+                    <div className="absolute -top-2 -right-2 p-1 rounded-full bg-primary shadow-soft">
+                      <Sparkles className="w-4 h-4 text-primary-foreground" />
+                    </div>
+                  </div>
                   <div className="flex-1">
-                    <p className="text-sm font-medium">Imagem carregada</p>
+                    <h4 className="text-lg font-semibold text-foreground mb-2">Foto carregada com sucesso!</h4>
+                    <p className="text-sm text-muted-foreground mb-2">
+                      {referenceFile?.name}
+                    </p>
                     <p className="text-xs text-muted-foreground">
-                      {referenceFile?.name} ({Math.round((referenceFile?.size || 0) / 1024)}KB)
+                      Tamanho: {Math.round((referenceFile?.size || 0) / 1024)}KB
                     </p>
                   </div>
                   <Button
@@ -202,7 +226,7 @@ export const ImageGenerator = () => {
                     variant="outline"
                     size="icon"
                     onClick={removeReferenceImage}
-                    className="shrink-0"
+                    className="shrink-0 hover:bg-destructive/10 hover:border-destructive/20"
                   >
                     <X className="h-4 w-4" />
                   </Button>
@@ -214,31 +238,84 @@ export const ImageGenerator = () => {
           <Button
             onClick={generateImage}
             disabled={isLoading || !referenceFile}
-            className="w-full"
+            size="lg"
+            className="w-full bg-gradient-luxury shadow-luxury hover:shadow-glow transition-all duration-300 animate-glow"
           >
             {isLoading ? (
               <>
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                Transformando...
+                <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                Criando sua transformação...
               </>
             ) : (
-              "Transformar em Versão Fitness"
+              <>
+                <Sparkles className="w-5 h-5 mr-2" />
+                Ver Minha Transformação
+              </>
             )}
           </Button>
         </CardContent>
       </Card>
 
+      {/* Results Section */}
       {generatedImage && (
-        <Card>
-          <CardHeader>
-            <CardTitle>Resultado da Transformação</CardTitle>
+        <Card className="shadow-luxury border-0 bg-card/50 backdrop-blur-sm animate-fade-in">
+          <CardHeader className="text-center pb-8">
+            <div className="flex justify-center mb-4">
+              <div className="p-3 rounded-full bg-gradient-luxury shadow-glow animate-float">
+                <Sparkles className="w-6 h-6 text-white" />
+              </div>
+            </div>
+            <CardTitle className="text-2xl font-bold bg-gradient-luxury bg-clip-text text-transparent">
+              Sua Transformação Incrível
+            </CardTitle>
+            <p className="text-muted-foreground mt-2">
+              Compare seu antes e depois - veja como você ficaria em 30 dias!
+            </p>
           </CardHeader>
           <CardContent>
-            <img
-              src={generatedImage}
-              alt="Imagem gerada"
-              className="w-full rounded-lg border"
-            />
+            <div className="grid md:grid-cols-2 gap-8">
+              {/* Before Image */}
+              <div className="space-y-4">
+                <div className="text-center">
+                  <h3 className="text-lg font-semibold text-muted-foreground mb-2">ANTES</h3>
+                  <div className="w-16 h-1 bg-muted mx-auto rounded-full"></div>
+                </div>
+                <div className="relative group">
+                  <img
+                    src={referenceImage}
+                    alt="Sua foto original"
+                    className="w-full rounded-2xl shadow-soft border-2 border-border group-hover:shadow-luxury transition-all duration-300"
+                  />
+                  <div className="absolute inset-0 rounded-2xl bg-black/5 group-hover:bg-black/0 transition-all duration-300"></div>
+                </div>
+              </div>
+
+              {/* After Image */}
+              <div className="space-y-4">
+                <div className="text-center">
+                  <h3 className="text-lg font-semibold bg-gradient-luxury bg-clip-text text-transparent mb-2">DEPOIS</h3>
+                  <div className="w-16 h-1 bg-gradient-luxury mx-auto rounded-full shadow-glow"></div>
+                </div>
+                <div className="relative group">
+                  <img
+                    src={generatedImage}
+                    alt="Sua transformação fitness"
+                    className="w-full rounded-2xl shadow-luxury border-2 border-primary/20 group-hover:shadow-glow transition-all duration-300 animate-glow"
+                  />
+                  <div className="absolute -inset-1 bg-gradient-luxury rounded-2xl opacity-20 blur-xl group-hover:opacity-30 transition-all duration-300"></div>
+                </div>
+              </div>
+            </div>
+
+            <div className="text-center mt-8 p-6 bg-gradient-accent rounded-2xl shadow-soft">
+              <h4 className="text-lg font-semibold mb-2 text-accent-foreground">
+                ✨ Incrível transformação!
+              </h4>
+              <p className="text-accent-foreground/80">
+                Esta é uma visualização de como você poderia ficar com dedicação e os cuidados certos.
+                Cada jornada é única e os resultados podem variar.
+              </p>
+            </div>
           </CardContent>
         </Card>
       )}
