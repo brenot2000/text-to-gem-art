@@ -15,15 +15,15 @@ const DEFAULT_PROMPT = `Pegue esta foto e recrie a mesma pessoa em versão **100
 
 Regras principais:
 
-* **Barriga/Abdômen:** a barriga deve ser **reta, firme e lisa**, **sem nenhuma pochete, dobra, volume ou gordura abaixo do umbigo**. Não deixe nenhuma saliência na parte inferior da barriga. O abdômen deve parecer definido, atlético e saudável por baixo da roupa.
-* **Cintura:** bem fina, destacando a forma atlética, deixando mais reta.
-* **Rosto:** afinado, mandíbula visível, pescoço alongado, bochechas menores.
-* **Braços e Ombros:** magros e tonificados.
-* **Peito:** firme, definido, sem gordura.
-* **Quadris e Pernas:** mais magros e definidos, pernas atléticas.
-* **Postura:** ereta, confiante, atlética.
-* **Roupas:** mantenha exatamente as roupas originais, sem mudar cor ou estilo. Apenas ajuste o caimento para o corpo magro. **Nunca invente novas roupas e nunca exponha pele.**
-* **Resultado:** fotorealista, com transformação clara: corpo magro, atlético, barriga reta e sem nenhuma gordura acumulada.`;
+ * **Barriga/Abdômen:** a barriga deve ser **reta, firme e lisa**, **sem nenhuma pochete, dobra, volume ou gordura abaixo do umbigo**. Não deixe nenhuma saliência na parte inferior da barriga. O abdômen deve parecer definido, atlético e saudável por baixo da roupa, caso a barriga eteja coberta manter coberta.
+ * **Cintura:** bem fina, destacando a forma atlética, deixando mais reta como de uma modelo.
+ * **Rosto:** afinado, mandíbula visível, pescoço alongado, bochechas menores como de uma modelo.
+ * **Braços e Ombros:** magros e tonificados como de uma modelo.
+ * **Peito:** firme, definido, sem gordura.
+ * **Quadris e Pernas:** mais magros e definidos, pernas atléticas como de uma modelo.
+ * **Postura:** ereta, confiante, atlética.
+ * **Roupas:** mantenha exatamente as roupas originais, sem mudar cor ou estilo. Apenas ajuste o caimento para o corpo magro. **Nunca invente novas roupas e nunca exponha pele.**
+ * **Resultado:** fotorealista, com transformação clara: corpo magro, atlético, barriga reta e sem nenhuma gordura acumulada.`;
 
 export const ImageGenerator = () => {
   const [generatedImage, setGeneratedImage] = useState<string | null>(null);
