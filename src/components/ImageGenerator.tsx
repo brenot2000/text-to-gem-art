@@ -87,6 +87,29 @@ export const ImageGenerator = () => {
     setReferenceFile(null);
   };
 
+  const clearCache = () => {
+    // Limpa images em cache
+    if (referenceImage) {
+      URL.revokeObjectURL(referenceImage);
+    }
+    if (generatedImage && generatedImage.startsWith('blob:')) {
+      URL.revokeObjectURL(generatedImage);
+    }
+    
+    // Reseta todos os estados
+    setReferenceImage(null);
+    setReferenceFile(null);
+    setGeneratedImage(null);
+    setUserData({ name: "", email: "", phone: "" });
+    setIsLoading(false);
+    setShowDataForm(false);
+    
+    // Limpa localStorage se houver
+    localStorage.clear();
+    
+    toast.success("Cache limpo com sucesso!");
+  };
+
   const handleShowDataForm = () => {
     if (!referenceFile) {
       toast.error("Por favor, selecione uma imagem de referência");
