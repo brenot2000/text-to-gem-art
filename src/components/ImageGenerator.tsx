@@ -151,7 +151,7 @@ IMPORTANTE: Você DEVE gerar uma imagem transformada, não apenas texto. Crie um
       });
 
       const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image-preview:generateContent?key=${DEFAULT_API_KEY}`,
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent?key=${DEFAULT_API_KEY}`,
         {
           method: "POST",
           headers: {
