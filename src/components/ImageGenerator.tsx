@@ -174,6 +174,13 @@ IMPORTANTE: Você DEVE gerar uma imagem transformada, não apenas texto. Crie um
       if (!response.ok) {
         const errorText = await response.text();
         console.error("Erro da API:", response.status, errorText);
+        
+        // Tratamento específico para erro 429 (rate limit)
+        if (response.status === 429) {
+          toast.error("Limite de uso da API atingido. Aguarde alguns minutos ou verifique seu plano no Google AI Studio em https://ai.google.dev/usage");
+          throw new Error(`Erro na API: ${response.status} - Rate limit exceeded`);
+        }
+        
         throw new Error(`Erro na API: ${response.status} - ${errorText}`);
       }
 
@@ -215,7 +222,7 @@ IMPORTANTE: Você DEVE gerar uma imagem transformada, não apenas texto. Crie um
         } else if (error.message.includes("Erro na API: 400")) {
           toast.error("Formato de imagem não suportado. Tente com uma foto diferente.");
         } else if (error.message.includes("Erro na API: 429")) {
-          toast.error("Muitas tentativas. Aguarde um momento e tente novamente.");
+          toast.error("Limite de uso da API atingido. Por favor, aguarde alguns minutos ou verifique seu plano no Google AI Studio.");
         } else if (error.message.includes("Erro na API: 403")) {
           toast.error("Problema com a chave da API. Entre em contato com o suporte.");
         } else {
