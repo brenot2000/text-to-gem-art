@@ -8,7 +8,7 @@ import { Loader2, Upload, X, Camera, Sparkles, Zap } from "lucide-react";
 import { toast } from "sonner";
 
 // API Key padrão do Google Gemini
-const DEFAULT_API_KEY = "AIzaSyAEnd3kAb2HlOtRQpApA3-HQ937bnr_Lw0";
+const DEFAULT_API_KEY = "AIzaSyAeeoYWnTw5hAw48SVVYYlnAvMjJpVASiM";
 
 // Prompt padrão fixo para transformação fitness
 const DEFAULT_PROMPT = `Pegue esta foto e recrie a mesma pessoa em versão **100% magra, atlética e fitness**, mantendo o mesmo rosto e as mesmas roupas originais.
@@ -32,9 +32,9 @@ export const ImageGenerator = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [showDataForm, setShowDataForm] = useState(false);
   const [userData, setUserData] = useState({
-    name: '',
-    email: '',
-    phone: ''
+    name: "",
+    email: "",
+    phone: "",
   });
 
   const convertImageToBase64 = (file: File): Promise<{ data: string; mimeType: string }> => {
@@ -42,13 +42,13 @@ export const ImageGenerator = () => {
       const reader = new FileReader();
       reader.onload = (e) => {
         const result = e.target?.result as string;
-        const base64Data = result.split(',')[1]; // Remove data:image/...;base64, prefix
+        const base64Data = result.split(",")[1]; // Remove data:image/...;base64, prefix
         resolve({
           data: base64Data,
-          mimeType: file.type
+          mimeType: file.type,
         });
       };
-      reader.onerror = () => reject(new Error('Erro ao converter imagem'));
+      reader.onerror = () => reject(new Error("Erro ao converter imagem"));
       reader.readAsDataURL(file);
     });
   };
@@ -58,14 +58,14 @@ export const ImageGenerator = () => {
     if (!file) return;
 
     // Validate file type
-    if (!file.type.startsWith('image/')) {
-      toast.error('Por favor, selecione apenas arquivos de imagem');
+    if (!file.type.startsWith("image/")) {
+      toast.error("Por favor, selecione apenas arquivos de imagem");
       return;
     }
 
     // Validate file size (max 10MB)
     if (file.size > 10 * 1024 * 1024) {
-      toast.error('Imagem muito grande. Tamanho máximo: 10MB');
+      toast.error("Imagem muito grande. Tamanho máximo: 10MB");
       return;
     }
 
@@ -73,9 +73,9 @@ export const ImageGenerator = () => {
       setReferenceFile(file);
       const imageUrl = URL.createObjectURL(file);
       setReferenceImage(imageUrl);
-      toast.success('Imagem de referência carregada!');
+      toast.success("Imagem de referência carregada!");
     } catch (error) {
-      toast.error('Erro ao carregar imagem');
+      toast.error("Erro ao carregar imagem");
     }
   };
 
@@ -114,9 +114,9 @@ export const ImageGenerator = () => {
   };
 
   const handleUserDataChange = (field: string, value: string) => {
-    setUserData(prev => ({
+    setUserData((prev) => ({
       ...prev,
-      [field]: value
+      [field]: value,
     }));
   };
 
@@ -138,7 +138,7 @@ IMPORTANTE: Você DEVE gerar uma imagem transformada, não apenas texto. Crie um
       const parts: any[] = [
         {
           text: enhancedPrompt,
-        }
+        },
       ];
 
       // Add reference image
@@ -146,8 +146,8 @@ IMPORTANTE: Você DEVE gerar uma imagem transformada, não apenas texto. Crie um
       parts.push({
         inlineData: {
           mimeType,
-          data: imageData
-        }
+          data: imageData,
+        },
       });
 
       const response = await fetch(
@@ -166,40 +166,42 @@ IMPORTANTE: Você DEVE gerar uma imagem transformada, não apenas texto. Crie um
             generationConfig: {
               temperature: 0.8,
               maxOutputTokens: 4096,
-            }
+            },
           }),
-        }
+        },
       );
 
       if (!response.ok) {
         const errorText = await response.text();
         console.error("Erro da API:", response.status, errorText);
-        
+
         // Tratamento específico para erro 429 (rate limit)
         if (response.status === 429) {
-          toast.error("Limite de uso da API atingido. Aguarde alguns minutos ou verifique seu plano no Google AI Studio em https://ai.google.dev/usage");
+          toast.error(
+            "Limite de uso da API atingido. Aguarde alguns minutos ou verifique seu plano no Google AI Studio em https://ai.google.dev/usage",
+          );
           throw new Error(`Erro na API: ${response.status} - Rate limit exceeded`);
         }
-        
+
         throw new Error(`Erro na API: ${response.status} - ${errorText}`);
       }
 
       const data = await response.json();
       console.log("Resposta da API:", data);
-      
+
       // Verifica se há dados de imagem na resposta
       if (data.candidates && data.candidates[0]?.content?.parts) {
-        const imagePart = data.candidates[0].content.parts.find(
-          (part: any) => part.inlineData?.mimeType?.startsWith("image/")
+        const imagePart = data.candidates[0].content.parts.find((part: any) =>
+          part.inlineData?.mimeType?.startsWith("image/"),
         );
-        
+
         if (imagePart && imagePart.inlineData?.data) {
           const imageUrl = `data:${imagePart.inlineData.mimeType};base64,${imagePart.inlineData.data}`;
           setGeneratedImage(imageUrl);
           toast.success("Imagem gerada com sucesso!");
           return;
         }
-        
+
         // Se não encontrou imagem, tenta novamente (máximo 3 tentativas)
         if (retryCount < 2) {
           console.log(`Tentativa ${retryCount + 1} não retornou imagem. Tentando novamente...`);
@@ -207,14 +209,16 @@ IMPORTANTE: Você DEVE gerar uma imagem transformada, não apenas texto. Crie um
           setTimeout(() => generateImage(retryCount + 1), 1000);
           return;
         } else {
-          throw new Error("A API não conseguiu gerar uma imagem após 3 tentativas. Tente novamente com uma foto diferente.");
+          throw new Error(
+            "A API não conseguiu gerar uma imagem após 3 tentativas. Tente novamente com uma foto diferente.",
+          );
         }
       } else {
         throw new Error("Resposta inesperada da API");
       }
     } catch (error) {
       console.error("Erro ao gerar imagem:", error);
-      
+
       // Mensagem de erro mais específica
       if (error instanceof Error) {
         if (error.message.includes("após 3 tentativas")) {
@@ -222,7 +226,9 @@ IMPORTANTE: Você DEVE gerar uma imagem transformada, não apenas texto. Crie um
         } else if (error.message.includes("Erro na API: 400")) {
           toast.error("Formato de imagem não suportado. Tente com uma foto diferente.");
         } else if (error.message.includes("Erro na API: 429")) {
-          toast.error("Limite de uso da API atingido. Por favor, aguarde alguns minutos ou verifique seu plano no Google AI Studio.");
+          toast.error(
+            "Limite de uso da API atingido. Por favor, aguarde alguns minutos ou verifique seu plano no Google AI Studio.",
+          );
         } else if (error.message.includes("Erro na API: 403")) {
           toast.error("Problema com a chave da API. Entre em contato com o suporte.");
         } else {
@@ -232,7 +238,8 @@ IMPORTANTE: Você DEVE gerar uma imagem transformada, não apenas texto. Crie um
         toast.error("Erro inesperado. Tente novamente.");
       }
     } finally {
-      if (retryCount === 0) { // Só finaliza loading na última tentativa
+      if (retryCount === 0) {
+        // Só finaliza loading na última tentativa
         setIsLoading(false);
       }
     }
@@ -251,21 +258,19 @@ IMPORTANTE: Você DEVE gerar uma imagem transformada, não apenas texto. Crie um
             </div>
           </div>
           <CardTitle className="text-3xl md:text-4xl font-bold text-white mb-4">Descubra Sua Melhor Versão</CardTitle>
-          <p className="text-white/80 text-xl">
-            Envie sua foto e veja como você ficaria com o corpo que sempre sonhou
-          </p>
+          <p className="text-white/80 text-xl">Envie sua foto e veja como você ficaria com o corpo que sempre sonhou</p>
         </CardHeader>
         <CardContent className="space-y-8 p-8">
           <div className="space-y-6">
-            <Label htmlFor="referenceImage" className="text-2xl font-bold text-white">Sua Foto Atual</Label>
+            <Label htmlFor="referenceImage" className="text-2xl font-bold text-white">
+              Sua Foto Atual
+            </Label>
             {!referenceImage ? (
               <div className="border-2 border-dashed border-white/30 rounded-3xl p-12 text-center bg-white/5 hover:border-white/50 hover:bg-white/10 transition-all duration-500 group">
                 <div className="animate-float-smooth group-hover:scale-110 transition-transform duration-500">
                   <Upload className="mx-auto h-16 w-16 text-white mb-6" />
                 </div>
-                <h3 className="text-2xl font-bold mb-4 text-white">
-                  Faça o upload da sua foto
-                </h3>
+                <h3 className="text-2xl font-bold mb-4 text-white">Faça o upload da sua foto</h3>
                 <p className="text-lg text-white/70 mb-8 max-w-md mx-auto leading-relaxed">
                   Siga o tutorial acima para uma foto perfeita e resultados mais precisos
                 </p>
@@ -280,7 +285,7 @@ IMPORTANTE: Você DEVE gerar uma imagem transformada, não apenas texto. Crie um
                   type="button"
                   size="lg"
                   className="bg-gradient-primary shadow-intense hover:shadow-glow transition-all duration-300 text-lg px-8 py-4 h-auto animate-glow-border"
-                  onClick={() => document.getElementById('referenceImage')?.click()}
+                  onClick={() => document.getElementById("referenceImage")?.click()}
                 >
                   <Upload className="w-6 h-6 mr-3" />
                   Escolher Foto
@@ -301,12 +306,8 @@ IMPORTANTE: Você DEVE gerar uma imagem transformada, não apenas texto. Crie um
                   </div>
                   <div className="flex-1">
                     <h4 className="text-2xl font-bold text-white mb-3">Foto carregada com sucesso!</h4>
-                    <p className="text-lg text-white/80 mb-2">
-                      {referenceFile?.name}
-                    </p>
-                    <p className="text-white/60">
-                      Tamanho: {Math.round((referenceFile?.size || 0) / 1024)}KB
-                    </p>
+                    <p className="text-lg text-white/80 mb-2">{referenceFile?.name}</p>
+                    <p className="text-white/60">Tamanho: {Math.round((referenceFile?.size || 0) / 1024)}KB</p>
                   </div>
                   <Button
                     type="button"
@@ -348,18 +349,16 @@ IMPORTANTE: Você DEVE gerar uma imagem transformada, não apenas texto. Crie um
         <Card className="glass-card backdrop-blur-glass border-white/20 bg-white/10 shadow-intense animate-fade-in-up">
           <CardHeader className="text-center pb-8">
             <div className="flex justify-center mb-6">
-            <div className="relative">
-              <div className="p-4 rounded-full bg-gradient-warm shadow-glow">
-                <Sparkles className="w-8 h-8 text-white" />
+              <div className="relative">
+                <div className="p-4 rounded-full bg-gradient-warm shadow-glow">
+                  <Sparkles className="w-8 h-8 text-white" />
+                </div>
               </div>
-            </div>
             </div>
             <CardTitle className="text-3xl md:text-4xl font-bold bg-gradient-warm bg-clip-text text-transparent mb-4">
               Sua Melhor Versão Revelada
             </CardTitle>
-            <p className="text-white/80 text-xl">
-              Compare e veja a diferença - esta poderia ser você em 30 dias!
-            </p>
+            <p className="text-white/80 text-xl">Compare e veja a diferença - esta poderia ser você em 30 dias!</p>
           </CardHeader>
           <CardContent className="p-8">
             <div className="grid lg:grid-cols-2 gap-12">
@@ -395,13 +394,16 @@ IMPORTANTE: Você DEVE gerar uma imagem transformada, não apenas texto. Crie um
               </div>
             </div>
 
-            <div className="text-center mt-12 p-10 bg-gradient-hero rounded-3xl shadow-intense animate-fade-in-up" style={{ animationDelay: '0.5s' }}>
+            <div
+              className="text-center mt-12 p-10 bg-gradient-hero rounded-3xl shadow-intense animate-fade-in-up"
+              style={{ animationDelay: "0.5s" }}
+            >
               <h4 className="text-3xl md:text-4xl font-bold mb-6 text-white">
                 ✨ Sabia que nós podemos te ajudar a ter esse resultado?
               </h4>
               <p className="text-white/90 text-xl leading-relaxed mb-6 max-w-3xl mx-auto">
-                Esta visualização mostra seu potencial real. Com o acompanhamento certo, 
-                você pode transformar essa visão em realidade.
+                Esta visualização mostra seu potencial real. Com o acompanhamento certo, você pode transformar essa
+                visão em realidade.
               </p>
               <p className="text-white/70 text-lg">
                 Cada jornada é única. Os resultados podem variar de acordo com dedicação e cuidados individuais.
@@ -425,9 +427,7 @@ IMPORTANTE: Você DEVE gerar uma imagem transformada, não apenas texto. Crie um
             <DialogTitle className="text-2xl font-bold text-white mb-2">
               Informe seus dados para ver o resultado gratuitamente
             </DialogTitle>
-            <p className="text-white/70 text-sm">
-              Seus dados são seguros e privados conosco
-            </p>
+            <p className="text-white/70 text-sm">Seus dados são seguros e privados conosco</p>
           </DialogHeader>
           <div className="space-y-6 pt-6">
             <div className="space-y-3">
@@ -439,7 +439,7 @@ IMPORTANTE: Você DEVE gerar uma imagem transformada, não apenas texto. Crie um
                 type="text"
                 placeholder="Seu nome completo"
                 value={userData.name}
-                onChange={(e) => handleUserDataChange('name', e.target.value)}
+                onChange={(e) => handleUserDataChange("name", e.target.value)}
                 className="bg-white/10 border-white/30 text-white placeholder:text-white/50 focus:border-white/50 focus:bg-white/15 backdrop-blur-sm h-12"
               />
             </div>
@@ -452,7 +452,7 @@ IMPORTANTE: Você DEVE gerar uma imagem transformada, não apenas texto. Crie um
                 type="email"
                 placeholder="seu@email.com"
                 value={userData.email}
-                onChange={(e) => handleUserDataChange('email', e.target.value)}
+                onChange={(e) => handleUserDataChange("email", e.target.value)}
                 className="bg-white/10 border-white/30 text-white placeholder:text-white/50 focus:border-white/50 focus:bg-white/15 backdrop-blur-sm h-12"
               />
             </div>
@@ -465,7 +465,7 @@ IMPORTANTE: Você DEVE gerar uma imagem transformada, não apenas texto. Crie um
                 type="tel"
                 placeholder="(11) 99999-9999"
                 value={userData.phone}
-                onChange={(e) => handleUserDataChange('phone', e.target.value)}
+                onChange={(e) => handleUserDataChange("phone", e.target.value)}
                 className="bg-white/10 border-white/30 text-white placeholder:text-white/50 focus:border-white/50 focus:bg-white/15 backdrop-blur-sm h-12"
               />
             </div>
