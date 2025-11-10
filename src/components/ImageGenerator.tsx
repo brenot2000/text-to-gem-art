@@ -8,7 +8,7 @@ import { Loader2, Upload, X, Camera, Sparkles, Zap } from "lucide-react";
 import { toast } from "sonner";
 
 // API Key padrão do Google Gemini
-const DEFAULT_API_KEY = "AIzaSyCT7Og4oj9ChYgTKIqLF8BIhcUeZSn8naU";
+const DEFAULT_API_KEY = "AIzaSyCVxveEVMyc-FXpNtcrdxv424QhVOuV9cg";
 
 // Prompt padrão fixo para transformação fitness
 const DEFAULT_PROMPT = `Pegue esta foto e recrie a mesma pessoa em versão **100% magra, atlética e fitness**, mantendo o mesmo rosto e as mesmas roupas originais.
