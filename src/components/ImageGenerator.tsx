@@ -364,6 +364,17 @@ IMPORTANTE: Você DEVE gerar uma imagem transformada, não apenas texto. Crie um
               </>
             )}
           </Button>
+
+          {(referenceImage || generatedImage) && (
+            <Button
+              onClick={clearCache}
+              variant="outline"
+              size="lg"
+              className="w-full border-white/30 bg-white/10 hover:bg-white/20 text-white backdrop-blur-sm"
+            >
+              Limpar Cache e Recomeçar
+            </Button>
+          )}
         </CardContent>
       </Card>
 
