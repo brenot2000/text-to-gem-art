@@ -6,9 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Loader2, Upload, X, Camera, Sparkles, Zap } from "lucide-react";
 import { toast } from "sonner";
-
-// API Key padrão do Google Gemini
-const DEFAULT_API_KEY = "AIzaSyAeeoYWnTw5hAw48SVVYYlnAvMjJpVASiM";
+import { supabase } from "@/integrations/supabase/client";
 
 // Prompt padrão fixo para transformação fitness
 const DEFAULT_PROMPT = `Pegue esta foto e recrie a mesma pessoa em versão **100% magra, atlética e fitness**, mantendo o mesmo rosto e as mesmas roupas originais.
@@ -153,116 +151,66 @@ export const ImageGenerator = () => {
     setGeneratedImage(null);
 
     try {
-      // Prepare parts array with more specific prompt for image generation
       const enhancedPrompt = `${DEFAULT_PROMPT}
 
 IMPORTANTE: Você DEVE gerar uma imagem transformada, não apenas texto. Crie uma imagem visual mostrando a pessoa com as transformações solicitadas.`;
 
-      const parts: any[] = [
-        {
-          text: enhancedPrompt,
-        },
-      ];
-
-      // Add reference image
+      // Convert image to base64
       const { data: imageData, mimeType } = await convertImageToBase64(referenceFile);
-      parts.push({
-        inlineData: {
+
+      console.log('Calling edge function to generate image...');
+
+      // Call edge function instead of API directly
+      const { data, error } = await supabase.functions.invoke('generate-fitness-image', {
+        body: {
+          imageData,
           mimeType,
-          data: imageData,
+          prompt: enhancedPrompt,
         },
       });
 
-      const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent?key=${DEFAULT_API_KEY}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            contents: [
-              {
-                parts: parts,
-              },
-            ],
-            generationConfig: {
-              temperature: 0.8,
-              maxOutputTokens: 4096,
-            },
-          }),
-        },
-      );
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error("Erro da API:", response.status, errorText);
-
-        // Tratamento específico para erro 429 (rate limit)
-        if (response.status === 429) {
-          toast.error(
-            "Limite de uso da API atingido. Aguarde alguns minutos ou verifique seu plano no Google AI Studio em https://ai.google.dev/usage",
-          );
-          throw new Error(`Erro na API: ${response.status} - Rate limit exceeded`);
-        }
-
-        throw new Error(`Erro na API: ${response.status} - ${errorText}`);
+      if (error) {
+        console.error('Edge function error:', error);
+        throw new Error(error.message || 'Erro ao chamar a função');
       }
 
-      const data = await response.json();
-      console.log("Resposta da API:", data);
-
-      // Verifica se há dados de imagem na resposta
-      if (data.candidates && data.candidates[0]?.content?.parts) {
-        const imagePart = data.candidates[0].content.parts.find((part: any) =>
-          part.inlineData?.mimeType?.startsWith("image/"),
-        );
-
-        if (imagePart && imagePart.inlineData?.data) {
-          const imageUrl = `data:${imagePart.inlineData.mimeType};base64,${imagePart.inlineData.data}`;
-          setGeneratedImage(imageUrl);
-          toast.success("Imagem gerada com sucesso!");
-          return;
+      if (!data || !data.success) {
+        if (data?.error === 'Rate limit exceeded') {
+          toast.error('Limite de uso atingido. Aguarde alguns minutos e tente novamente.');
+          throw new Error('Rate limit exceeded');
         }
-
-        // Se não encontrou imagem, tenta novamente (máximo 3 tentativas)
+        
         if (retryCount < 2) {
-          console.log(`Tentativa ${retryCount + 1} não retornou imagem. Tentando novamente...`);
+          console.log(`Tentativa ${retryCount + 1} falhou. Tentando novamente...`);
           toast.info(`Processando... Tentativa ${retryCount + 2}/3`);
           setTimeout(() => generateImage(retryCount + 1), 1000);
           return;
-        } else {
-          throw new Error(
-            "A API não conseguiu gerar uma imagem após 3 tentativas. Tente novamente com uma foto diferente.",
-          );
         }
-      } else {
-        throw new Error("Resposta inesperada da API");
+        
+        throw new Error(data?.message || 'A API não conseguiu gerar uma imagem');
       }
+
+      // Success - construct image URL from base64 data
+      const imageUrl = `data:${data.mimeType};base64,${data.imageData}`;
+      setGeneratedImage(imageUrl);
+      toast.success("Imagem gerada com sucesso!");
+
     } catch (error) {
       console.error("Erro ao gerar imagem:", error);
 
-      // Mensagem de erro mais específica
       if (error instanceof Error) {
-        if (error.message.includes("após 3 tentativas")) {
-          toast.error(error.message);
-        } else if (error.message.includes("Erro na API: 400")) {
-          toast.error("Formato de imagem não suportado. Tente com uma foto diferente.");
-        } else if (error.message.includes("Erro na API: 429")) {
-          toast.error(
-            "Limite de uso da API atingido. Por favor, aguarde alguns minutos ou verifique seu plano no Google AI Studio.",
-          );
-        } else if (error.message.includes("Erro na API: 403")) {
-          toast.error("Problema com a chave da API. Entre em contato com o suporte.");
+        if (error.message.includes('Rate limit')) {
+          toast.error('Limite de uso atingido. Aguarde alguns minutos.');
+        } else if (error.message.includes('após 3 tentativas')) {
+          toast.error('Não foi possível gerar a imagem após 3 tentativas. Tente com outra foto.');
         } else {
-          toast.error("Erro ao gerar imagem. Tente novamente em alguns segundos.");
+          toast.error('Erro ao gerar imagem. Tente novamente.');
         }
       } else {
         toast.error("Erro inesperado. Tente novamente.");
       }
     } finally {
       if (retryCount === 0) {
-        // Só finaliza loading na última tentativa
         setIsLoading(false);
       }
     }

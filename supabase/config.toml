@@ -1,1 +1,4 @@
 project_id = "yfnbmgnudekyadavzmgw"
+
+[functions.generate-fitness-image]
+verify_jwt = false
