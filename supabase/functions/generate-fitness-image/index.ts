@@ -12,7 +12,7 @@ serve(async (req) => {
   }
 
   try {
-    const { imageData, mimeType, prompt } = await req.json();
+    const { imageData, mimeType, prompt, userData } = await req.json();
 
     if (!imageData || !mimeType || !prompt) {
       return new Response(
@@ -91,6 +91,41 @@ serve(async (req) => {
     const [meta, b64] = url.split(",");
     const mimeMatch = /^data:(.*?);base64$/.exec(meta || "");
     const outMime = mimeMatch?.[1] || "image/png";
+
+    // Save lead to database if userData provided
+    if (userData && userData.name && userData.email && userData.phone) {
+      const supabaseUrl = Deno.env.get("SUPABASE_URL");
+      const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+
+      if (supabaseUrl && supabaseServiceKey) {
+        try {
+          const leadResponse = await fetch(`${supabaseUrl}/rest/v1/leads`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "apikey": supabaseServiceKey,
+              "Authorization": `Bearer ${supabaseServiceKey}`,
+              "Prefer": "return=minimal"
+            },
+            body: JSON.stringify({
+              name: userData.name,
+              email: userData.email,
+              phone: userData.phone,
+              status: "foto_gerada",
+              reference_image_url: `data:${mimeType};base64,${imageData}`,
+              generated_image_url: url,
+            })
+          });
+
+          if (!leadResponse.ok) {
+            console.error("Failed to save lead:", await leadResponse.text());
+          }
+        } catch (saveError) {
+          console.error("Error saving lead:", saveError);
+          // Don't fail the whole request if lead saving fails
+        }
+      }
+    }
 
     return new Response(
       JSON.stringify({ success: true, imageData: b64, mimeType: outMime }),
