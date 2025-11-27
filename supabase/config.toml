@@ -2,3 +2,6 @@ project_id = "yfnbmgnudekyadavzmgw"
 
 [functions.generate-fitness-image]
 verify_jwt = false
+
+[functions.admin-leads]
+verify_jwt = false
