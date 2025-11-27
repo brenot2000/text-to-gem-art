@@ -21,6 +21,7 @@ type LeadCardProps = {
     created_at: string;
     vendedor: string | null;
     valor_venda: number | null;
+    fotos_geradas: number | null;
   };
 };
 
@@ -143,6 +144,11 @@ export const LeadCard = ({ lead }: LeadCardProps) => {
       <CardContent className="p-4 space-y-3">
         <div>
           <h3 className="text-white font-bold text-base">{lead.name}</h3>
+          {lead.fotos_geradas && lead.fotos_geradas > 1 && (
+            <p className="text-white/60 text-xs mt-1">
+              {lead.fotos_geradas} fotos geradas
+            </p>
+          )}
         </div>
 
         <div className="space-y-2 text-sm">

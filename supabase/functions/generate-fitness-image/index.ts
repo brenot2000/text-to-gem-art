@@ -1,5 +1,6 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.3';
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -19,6 +20,41 @@ serve(async (req) => {
         JSON.stringify({ success: false, code: 400, error: "bad_request", message: "Missing imageData, mimeType or prompt" }),
         { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
+    }
+
+    // Verificar limite de fotos antes de gerar
+    if (userData && userData.email) {
+      const supabaseUrl = Deno.env.get("SUPABASE_URL");
+      const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+
+      if (supabaseUrl && supabaseServiceKey) {
+        const supabase = createClient(supabaseUrl, supabaseServiceKey);
+
+        // Buscar lead existente pelo email
+        const { data: existingLead, error: searchError } = await supabase
+          .from('leads')
+          .select('id, fotos_geradas')
+          .eq('email', userData.email)
+          .maybeSingle();
+
+        if (searchError) {
+          console.error("Error searching for existing lead:", searchError);
+        }
+
+        // Se encontrou e já tem 3 fotos, retorna erro
+        if (existingLead && existingLead.fotos_geradas >= 3) {
+          return new Response(
+            JSON.stringify({ 
+              success: false, 
+              code: 403, 
+              error: "limit_reached", 
+              message: "Você atingiu o limite de 3 gerações de fotos. Entre em contato conosco para mais informações.",
+              fotosGeradas: existingLead.fotos_geradas
+            }),
+            { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+          );
+        }
+      }
     }
 
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
@@ -92,36 +128,65 @@ serve(async (req) => {
     const mimeMatch = /^data:(.*?);base64$/.exec(meta || "");
     const outMime = mimeMatch?.[1] || "image/png";
 
-    // Save lead to database if userData provided
+    // Save or update lead in database
     if (userData && userData.name && userData.email && userData.phone) {
       const supabaseUrl = Deno.env.get("SUPABASE_URL");
       const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
 
       if (supabaseUrl && supabaseServiceKey) {
-        try {
-          const leadResponse = await fetch(`${supabaseUrl}/rest/v1/leads`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              "apikey": supabaseServiceKey,
-              "Authorization": `Bearer ${supabaseServiceKey}`,
-              "Prefer": "return=minimal"
-            },
-            body: JSON.stringify({
-              name: userData.name,
-              email: userData.email,
-              phone: userData.phone,
-              status: "foto_gerada",
-              reference_image_url: `data:${mimeType};base64,${imageData}`,
-              generated_image_url: url,
-            })
-          });
+        const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-          if (!leadResponse.ok) {
-            console.error("Failed to save lead:", await leadResponse.text());
+        try {
+          // Buscar lead existente pelo email
+          const { data: existingLead, error: searchError } = await supabase
+            .from('leads')
+            .select('id, fotos_geradas')
+            .eq('email', userData.email)
+            .maybeSingle();
+
+          if (searchError) {
+            console.error("Error searching for existing lead:", searchError);
+          }
+
+          if (existingLead) {
+            // Atualizar lead existente
+            const novaQuantidade = (existingLead.fotos_geradas || 0) + 1;
+            const { error: updateError } = await supabase
+              .from('leads')
+              .update({
+                reference_image_url: `data:${mimeType};base64,${imageData}`,
+                generated_image_url: url,
+                fotos_geradas: novaQuantidade,
+              })
+              .eq('id', existingLead.id);
+
+            if (updateError) {
+              console.error("Failed to update lead:", updateError);
+            } else {
+              console.log(`Lead updated. Fotos geradas: ${novaQuantidade}/3`);
+            }
+          } else {
+            // Criar novo lead
+            const { error: insertError } = await supabase
+              .from('leads')
+              .insert({
+                name: userData.name,
+                email: userData.email,
+                phone: userData.phone,
+                status: "foto_gerada",
+                reference_image_url: `data:${mimeType};base64,${imageData}`,
+                generated_image_url: url,
+                fotos_geradas: 1,
+              });
+
+            if (insertError) {
+              console.error("Failed to create lead:", insertError);
+            } else {
+              console.log("New lead created. Fotos geradas: 1/3");
+            }
           }
         } catch (saveError) {
-          console.error("Error saving lead:", saveError);
+          console.error("Error saving/updating lead:", saveError);
           // Don't fail the whole request if lead saving fails
         }
       }
