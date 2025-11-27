@@ -6,6 +6,23 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
+// Simple retry helper
+async function withRetry<T>(fn: () => Promise<T>, retries = 3, delay = 1000): Promise<T> {
+  let lastError: Error | null = null;
+  for (let i = 0; i < retries; i++) {
+    try {
+      return await fn();
+    } catch (error) {
+      lastError = error as Error;
+      console.log(`Attempt ${i + 1} failed, retrying in ${delay}ms...`);
+      if (i < retries - 1) {
+        await new Promise(resolve => setTimeout(resolve, delay));
+      }
+    }
+  }
+  throw lastError;
+}
+
 serve(async (req) => {
   // Handle CORS preflight
   if (req.method === "OPTIONS") {
@@ -47,21 +64,18 @@ serve(async (req) => {
     // Create admin client with service role to bypass RLS
     const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey);
 
-    // Check if user is admin
-    const { data: roleData, error: roleError } = await supabaseAdmin
-      .from("user_roles")
-      .select("role")
-      .eq("user_id", user.id)
-      .eq("role", "admin")
-      .maybeSingle();
-
-    if (roleError) {
-      console.error("Role check error:", roleError);
-      return new Response(
-        JSON.stringify({ error: "Error checking permissions" }),
-        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
-    }
+    // Check if user is admin with retry
+    const roleData = await withRetry(async () => {
+      const { data, error } = await supabaseAdmin
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", user.id)
+        .eq("role", "admin")
+        .maybeSingle();
+      
+      if (error) throw error;
+      return data;
+    });
 
     if (!roleData) {
       console.error("User is not admin:", user.id);
@@ -79,21 +93,21 @@ serve(async (req) => {
 
     // Handle different actions
     if (method === "GET" && action === "list") {
-      // List all leads
-      const { data: leads, error: leadsError } = await supabaseAdmin
-        .from("leads")
-        .select("*")
-        .order("created_at", { ascending: false });
+      // List all leads with retry
+      const leads = await withRetry(async () => {
+        const { data, error } = await supabaseAdmin
+          .from("leads")
+          .select("*")
+          .order("created_at", { ascending: false });
+        
+        if (error) {
+          console.error("Database error fetching leads:", error);
+          throw error;
+        }
+        return data;
+      });
 
-      if (leadsError) {
-        console.error("Error fetching leads:", leadsError);
-        return new Response(
-          JSON.stringify({ error: "Error fetching leads" }),
-          { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-        );
-      }
-
-      console.log(`Fetched ${leads?.length || 0} leads`);
+      console.log(`Fetched ${leads?.length || 0} leads successfully`);
       return new Response(
         JSON.stringify({ data: leads }),
         { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
@@ -114,20 +128,17 @@ serve(async (req) => {
 
       console.log("Updating lead:", id, updates);
 
-      const { data, error } = await supabaseAdmin
-        .from("leads")
-        .update(updates)
-        .eq("id", id)
-        .select()
-        .single();
-
-      if (error) {
-        console.error("Error updating lead:", error);
-        return new Response(
-          JSON.stringify({ error: "Error updating lead" }),
-          { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-        );
-      }
+      const data = await withRetry(async () => {
+        const { data, error } = await supabaseAdmin
+          .from("leads")
+          .update(updates)
+          .eq("id", id)
+          .select()
+          .single();
+        
+        if (error) throw error;
+        return data;
+      });
 
       console.log("Lead updated successfully:", id);
       return new Response(
@@ -149,18 +160,14 @@ serve(async (req) => {
 
       console.log("Deleting lead:", id);
 
-      const { error } = await supabaseAdmin
-        .from("leads")
-        .delete()
-        .eq("id", id);
-
-      if (error) {
-        console.error("Error deleting lead:", error);
-        return new Response(
-          JSON.stringify({ error: "Error deleting lead" }),
-          { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-        );
-      }
+      await withRetry(async () => {
+        const { error } = await supabaseAdmin
+          .from("leads")
+          .delete()
+          .eq("id", id);
+        
+        if (error) throw error;
+      });
 
       console.log("Lead deleted successfully:", id);
       return new Response(
@@ -176,7 +183,7 @@ serve(async (req) => {
   } catch (error) {
     console.error("Unexpected error:", error);
     return new Response(
-      JSON.stringify({ error: "Internal server error" }),
+      JSON.stringify({ error: "Internal server error", details: String(error) }),
       { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   }
