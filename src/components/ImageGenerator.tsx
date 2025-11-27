@@ -235,9 +235,10 @@ IMPORTANTE: Você DEVE gerar uma imagem transformada, não apenas texto. Crie um
                 <Input
                   id="referenceImage"
                   type="file"
-                  accept="image/*"
+                  accept="image/png,image/jpeg,image/jpg,image/webp"
                   onChange={handleImageUpload}
                   className="hidden"
+                  capture={undefined}
                 />
                 <div className="flex justify-center">
                   <Button
