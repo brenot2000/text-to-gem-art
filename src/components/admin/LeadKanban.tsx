@@ -3,13 +3,23 @@ import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "@/hooks/use-toast";
 import { LeadCard } from "./LeadCard";
+import { DashboardStats } from "./DashboardStats";
+import {
+  DndContext,
+  DragEndEvent,
+  DragOverlay,
+  DragStartEvent,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
 
 type Lead = {
   id: string;
   name: string;
   email: string;
   phone: string;
-  status: "foto_gerada" | "contato_feito" | "venda_realizada";
+  status: "foto_gerada" | "contato_feito" | "venda_realizada" | "venda_perdida";
   reference_image_url: string | null;
   generated_image_url: string | null;
   created_at: string;
@@ -18,10 +28,19 @@ type Lead = {
 export const LeadKanban = () => {
   const [leads, setLeads] = useState<Lead[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [activeId, setActiveId] = useState<string | null>(null);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8,
+      },
+    })
+  );
 
   useEffect(() => {
     fetchLeads();
-    
+
     // Subscribe to realtime changes
     const channel = supabase
       .channel("leads_changes")
@@ -65,7 +84,7 @@ export const LeadKanban = () => {
 
   const updateLeadStatus = async (
     leadId: string,
-    newStatus: "foto_gerada" | "contato_feito" | "venda_realizada"
+    newStatus: "foto_gerada" | "contato_feito" | "venda_realizada" | "venda_perdida"
   ) => {
     try {
       const { error } = await supabase
@@ -88,15 +107,46 @@ export const LeadKanban = () => {
     }
   };
 
+  const handleDragStart = (event: DragStartEvent) => {
+    setActiveId(event.active.id as string);
+  };
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    setActiveId(null);
+
+    if (!over) return;
+
+    const leadId = active.id as string;
+    const newStatus = over.id as "foto_gerada" | "contato_feito" | "venda_realizada" | "venda_perdida";
+
+    const lead = leads.find((l) => l.id === leadId);
+    if (lead && lead.status !== newStatus) {
+      updateLeadStatus(leadId, newStatus);
+    }
+  };
+
   const getLeadsByStatus = (status: string) => {
     return leads.filter((lead) => lead.status === status);
+  };
+
+  const getStats = () => {
+    return {
+      fotosGeradas: leads.filter((l) => l.status === "foto_gerada").length,
+      contatosFeitos: leads.filter((l) => l.status === "contato_feito").length,
+      vendasRealizadas: leads.filter((l) => l.status === "venda_realizada").length,
+      vendasPerdidas: leads.filter((l) => l.status === "venda_perdida").length,
+    };
   };
 
   const columns = [
     { status: "foto_gerada", title: "Fotos Geradas", color: "from-purple-500 to-pink-500" },
     { status: "contato_feito", title: "Contatos Feitos", color: "from-blue-500 to-cyan-500" },
     { status: "venda_realizada", title: "Vendas Realizadas", color: "from-green-500 to-emerald-500" },
+    { status: "venda_perdida", title: "Vendas Perdidas", color: "from-red-500 to-pink-500" },
   ];
+
+  const activeLead = activeId ? leads.find((l) => l.id === activeId) : null;
 
   if (isLoading) {
     return (
@@ -107,36 +157,51 @@ export const LeadKanban = () => {
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-      {columns.map((column) => (
-        <Card
-          key={column.status}
-          className="glass-card backdrop-blur-glass border-white/20 bg-white/10"
-        >
-          <CardHeader>
-            <CardTitle className={`text-white bg-gradient-to-r ${column.color} bg-clip-text text-transparent`}>
-              {column.title}
-              <span className="ml-2 text-sm font-normal text-white/60">
-                ({getLeadsByStatus(column.status).length})
-              </span>
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4 max-h-[calc(100vh-280px)] overflow-y-auto">
-            {getLeadsByStatus(column.status).map((lead) => (
-              <LeadCard
-                key={lead.id}
-                lead={lead}
-                onStatusChange={updateLeadStatus}
-              />
-            ))}
-            {getLeadsByStatus(column.status).length === 0 && (
-              <p className="text-white/60 text-center py-8">
-                Nenhum lead nesta coluna
-              </p>
-            )}
-          </CardContent>
-        </Card>
-      ))}
-    </div>
+    <>
+      <DashboardStats stats={getStats()} />
+
+      <DndContext
+        sensors={sensors}
+        onDragStart={handleDragStart}
+        onDragEnd={handleDragEnd}
+      >
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {columns.map((column) => (
+            <Card
+              key={column.status}
+              id={column.status}
+              className="glass-card backdrop-blur-glass border-white/20 bg-white/10"
+            >
+              <CardHeader>
+                <CardTitle className={`text-white bg-gradient-to-r ${column.color} bg-clip-text text-transparent`}>
+                  {column.title}
+                  <span className="ml-2 text-sm font-normal text-white/60">
+                    ({getLeadsByStatus(column.status).length})
+                  </span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4 max-h-[calc(100vh-380px)] overflow-y-auto">
+                {getLeadsByStatus(column.status).map((lead) => (
+                  <LeadCard key={lead.id} lead={lead} />
+                ))}
+                {getLeadsByStatus(column.status).length === 0 && (
+                  <p className="text-white/60 text-center py-8">
+                    Nenhum lead nesta coluna
+                  </p>
+                )}
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+
+        <DragOverlay>
+          {activeLead ? (
+            <div className="opacity-80">
+              <LeadCard lead={activeLead} />
+            </div>
+          ) : null}
+        </DragOverlay>
+      </DndContext>
+    </>
   );
 };
