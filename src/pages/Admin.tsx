@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
 import { LogOut, Users } from "lucide-react";
 import { LeadKanban } from "@/components/admin/LeadKanban";
+import logo from "@/assets/logo.png";
 
 const Admin = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -72,8 +73,9 @@ const Admin = () => {
       <div className="border-b border-white/20 bg-black/20 backdrop-blur-glass">
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <Users className="w-8 h-8 text-white" />
+            <div className="flex items-center gap-4">
+              <img src={logo} alt="Beautyness Club" className="h-8 w-auto" />
+              <div className="h-8 w-px bg-white/20"></div>
               <h1 className="text-2xl font-bold text-white">Painel Admin</h1>
             </div>
             <Button

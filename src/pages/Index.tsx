@@ -1,6 +1,7 @@
 import { ImageGenerator } from "@/components/ImageGenerator";
 import { Sparkles, Heart, Star, Camera, ArrowDown, Zap, Shield, Target } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import logo from "@/assets/logo.png";
 
 const Index = () => {
   return (
@@ -16,6 +17,9 @@ const Index = () => {
       <div className="relative">
         <div className="container mx-auto px-6 py-24 text-center relative z-10">
           <div className="animate-fade-in-up max-w-5xl mx-auto">
+            <div className="flex justify-center mb-8">
+              <img src={logo} alt="Beautyness Club" className="h-12 w-auto" />
+            </div>
             <h1 className="text-6xl md:text-7xl font-bold mb-8 leading-tight text-white drop-shadow-lg">
               Se veja mais magra com
               <br />
