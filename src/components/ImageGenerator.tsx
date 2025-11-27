@@ -239,15 +239,17 @@ IMPORTANTE: Você DEVE gerar uma imagem transformada, não apenas texto. Crie um
                   onChange={handleImageUpload}
                   className="hidden"
                 />
-                <Button
-                  type="button"
-                  size="lg"
-                  className="bg-primary text-white shadow-soft hover:shadow-glow transition-all duration-300 text-xl sm:text-2xl px-10 sm:px-12 py-6 sm:py-7 h-auto font-semibold"
-                  onClick={() => document.getElementById("referenceImage")?.click()}
-                >
-                  <Upload className="w-7 h-7 sm:w-8 sm:h-8 mr-3" />
-                  Escolher Foto
-                </Button>
+                <div className="flex justify-center">
+                  <Button
+                    type="button"
+                    size="lg"
+                    className="bg-primary text-white shadow-soft hover:shadow-glow transition-all duration-300 text-base sm:text-lg px-8 py-3 h-auto"
+                    onClick={() => document.getElementById("referenceImage")?.click()}
+                  >
+                    <Upload className="w-5 h-5 mr-2" />
+                    Escolher Foto
+                  </Button>
+                </div>
               </div>
             ) : (
               <div className="relative border-2 border-primary/30 rounded-3xl p-8 bg-card animate-fade-in-up">
