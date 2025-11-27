@@ -362,9 +362,19 @@ IMPORTANTE: Você DEVE gerar uma imagem transformada, não apenas texto. Crie um
                 Esta visualização mostra seu potencial real. Com o acompanhamento certo, você pode transformar essa
                 visão em realidade.
               </p>
-              <p className="text-muted-foreground text-lg">
+              <p className="text-muted-foreground text-lg mb-8">
                 Cada jornada é única. Os resultados podem variar de acordo com dedicação e cuidados individuais.
               </p>
+              <Button
+                asChild
+                size="lg"
+                className="bg-primary text-white hover:bg-primary/90 shadow-soft hover:shadow-glow transition-all duration-300 text-xl px-10 py-6 h-auto"
+              >
+                <a href="https://beautyness.club/" target="_blank" rel="noopener noreferrer">
+                  <Sparkles className="w-6 h-6 mr-3" />
+                  Conheça a Beautyness Club
+                </a>
+              </Button>
             </div>
           </CardContent>
         </Card>
