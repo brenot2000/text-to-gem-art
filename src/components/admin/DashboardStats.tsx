@@ -167,12 +167,12 @@ export const DashboardStats = ({ stats, leads }: DashboardStatsProps) => {
 
         <Card className="glass-card backdrop-blur-glass border-white/30 bg-[#1a1a2e]/80 shadow-xl">
           <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
+            <div className="flex items-center justify-between gap-3">
+              <div className="min-w-0 flex-1">
                 <p className="text-white/80 text-sm mb-1 font-medium">Valor Total</p>
-                <p className="text-3xl font-bold text-green-400">{formatCurrency(valorTotal)}</p>
+                <p className="text-2xl lg:text-3xl font-bold text-green-400 truncate">{formatCurrency(valorTotal)}</p>
               </div>
-              <div className="p-3 rounded-full" style={{ background: "linear-gradient(135deg, #10b981 0%, #059669 100%)" }}>
+              <div className="p-3 rounded-full shrink-0" style={{ background: "linear-gradient(135deg, #10b981 0%, #059669 100%)" }}>
                 <DollarSign className="w-6 h-6 text-white" />
               </div>
             </div>
