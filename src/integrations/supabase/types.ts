@@ -25,6 +25,8 @@ export type Database = {
           reference_image_url: string | null
           status: Database["public"]["Enums"]["lead_status"]
           updated_at: string | null
+          valor_venda: number | null
+          vendedor: string | null
         }
         Insert: {
           created_at?: string | null
@@ -36,6 +38,8 @@ export type Database = {
           reference_image_url?: string | null
           status?: Database["public"]["Enums"]["lead_status"]
           updated_at?: string | null
+          valor_venda?: number | null
+          vendedor?: string | null
         }
         Update: {
           created_at?: string | null
@@ -47,6 +51,8 @@ export type Database = {
           reference_image_url?: string | null
           status?: Database["public"]["Enums"]["lead_status"]
           updated_at?: string | null
+          valor_venda?: number | null
+          vendedor?: string | null
         }
         Relationships: []
       }

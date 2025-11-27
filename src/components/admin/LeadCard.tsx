@@ -1,10 +1,13 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Mail, Phone, Calendar, Copy, Check } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Mail, Phone, Calendar, Copy, Check, DollarSign, User } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { useState } from "react";
 import { useDraggable } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
+import { supabase } from "@/integrations/supabase/client";
 
 type LeadCardProps = {
   lead: {
@@ -16,11 +19,16 @@ type LeadCardProps = {
     reference_image_url: string | null;
     generated_image_url: string | null;
     created_at: string;
+    vendedor: string | null;
+    valor_venda: number | null;
   };
 };
 
 export const LeadCard = ({ lead }: LeadCardProps) => {
   const [copied, setCopied] = useState(false);
+  const [vendedor, setVendedor] = useState(lead.vendedor || "");
+  const [valorVenda, setValorVenda] = useState(lead.valor_venda?.toString() || "");
+  const [isSaving, setIsSaving] = useState(false);
 
   const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
     id: lead.id,
@@ -57,6 +65,42 @@ export const LeadCard = ({ lead }: LeadCardProps) => {
         description: "Não foi possível copiar o número.",
         variant: "destructive",
       });
+    }
+  };
+
+  const handleUpdateVenda = async () => {
+    setIsSaving(true);
+    try {
+      const valorNumerico = valorVenda ? parseFloat(valorVenda.replace(",", ".")) : null;
+      
+      const { error } = await supabase
+        .from("leads")
+        .update({
+          vendedor: vendedor || null,
+          valor_venda: valorNumerico,
+        })
+        .eq("id", lead.id);
+
+      if (error) throw error;
+
+      toast({
+        title: "✅ Dados atualizados!",
+        description: "Vendedor e valor foram salvos com sucesso.",
+      });
+    } catch (error: any) {
+      toast({
+        title: "Erro ao atualizar",
+        description: error.message,
+        variant: "destructive",
+      });
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleBlur = () => {
+    if (vendedor !== (lead.vendedor || "") || valorVenda !== (lead.valor_venda?.toString() || "")) {
+      handleUpdateVenda();
     }
   };
 
@@ -116,6 +160,41 @@ export const LeadCard = ({ lead }: LeadCardProps) => {
             {formatDate(lead.created_at)}
           </div>
         </div>
+
+        {/* Campos de Vendedor e Valor */}
+        {(lead.status === "venda_realizada" || lead.status === "contato_feito") && (
+          <div className="space-y-2 pt-2 border-t border-white/20" onClick={(e) => e.stopPropagation()}>
+            <div className="space-y-1">
+              <Label className="text-white/80 text-xs flex items-center gap-1">
+                <User className="w-3 h-3" />
+                Vendedor
+              </Label>
+              <Input
+                value={vendedor}
+                onChange={(e) => setVendedor(e.target.value)}
+                onBlur={handleBlur}
+                placeholder="Nome do vendedor"
+                className="h-8 bg-white/10 border-white/20 text-white text-sm placeholder:text-white/40"
+                disabled={isSaving}
+              />
+            </div>
+            <div className="space-y-1">
+              <Label className="text-white/80 text-xs flex items-center gap-1">
+                <DollarSign className="w-3 h-3" />
+                Valor da Venda
+              </Label>
+              <Input
+                value={valorVenda}
+                onChange={(e) => setValorVenda(e.target.value)}
+                onBlur={handleBlur}
+                placeholder="0,00"
+                type="text"
+                className="h-8 bg-white/10 border-white/20 text-white text-sm placeholder:text-white/40"
+                disabled={isSaving}
+              />
+            </div>
+          </div>
+        )}
 
         {/* Images inline */}
         {(lead.reference_image_url || lead.generated_image_url) && (
