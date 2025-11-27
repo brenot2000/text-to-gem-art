@@ -2,7 +2,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Mail, Phone, Calendar, Copy, Check, DollarSign, User } from "lucide-react";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { Mail, Phone, Calendar, Copy, Check, DollarSign, User, ZoomIn, X } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { useState } from "react";
 import { useDraggable } from "@dnd-kit/core";
@@ -34,6 +35,14 @@ export const LeadCard = ({ lead }: LeadCardProps) => {
       : ""
   );
   const [isSaving, setIsSaving] = useState(false);
+  const [imageViewerOpen, setImageViewerOpen] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<{ url: string; label: string } | null>(null);
+
+  const openImageViewer = (url: string, label: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setSelectedImage({ url, label });
+    setImageViewerOpen(true);
+  };
 
   const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
     id: lead.id,
@@ -239,27 +248,102 @@ export const LeadCard = ({ lead }: LeadCardProps) => {
         {(lead.reference_image_url || lead.generated_image_url) && (
           <div className="grid grid-cols-2 gap-2 mt-3">
             {lead.reference_image_url && (
-              <div>
+              <div 
+                className="cursor-pointer group"
+                onClick={(e) => openImageViewer(lead.reference_image_url!, "Antes", e)}
+              >
                 <p className="text-white/70 text-xs mb-1 text-center font-medium">Antes</p>
-                <img
-                  src={lead.reference_image_url}
-                  alt="Antes"
-                  className="w-full h-32 object-cover rounded-lg border-2 border-white/20 shadow-md"
-                />
+                <div className="relative">
+                  <img
+                    src={lead.reference_image_url}
+                    alt="Antes"
+                    className="w-full h-32 object-cover rounded-lg border-2 border-white/20 shadow-md group-hover:border-white/40 transition-all"
+                  />
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 rounded-lg transition-all flex items-center justify-center">
+                    <ZoomIn className="w-6 h-6 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
+                  </div>
+                </div>
               </div>
             )}
             {lead.generated_image_url && (
-              <div>
+              <div 
+                className="cursor-pointer group"
+                onClick={(e) => openImageViewer(lead.generated_image_url!, "Depois", e)}
+              >
                 <p className="text-white/70 text-xs mb-1 text-center font-medium">Depois</p>
-                <img
-                  src={lead.generated_image_url}
-                  alt="Depois"
-                  className="w-full h-32 object-cover rounded-lg border-2 border-white/20 shadow-md"
-                />
+                <div className="relative">
+                  <img
+                    src={lead.generated_image_url}
+                    alt="Depois"
+                    className="w-full h-32 object-cover rounded-lg border-2 border-white/20 shadow-md group-hover:border-white/40 transition-all"
+                  />
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 rounded-lg transition-all flex items-center justify-center">
+                    <ZoomIn className="w-6 h-6 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
+                  </div>
+                </div>
               </div>
             )}
           </div>
         )}
+
+        {/* Image Viewer Dialog */}
+        <Dialog open={imageViewerOpen} onOpenChange={setImageViewerOpen}>
+          <DialogContent className="max-w-4xl p-0 bg-black/95 border-white/20" onClick={(e) => e.stopPropagation()}>
+            <DialogTitle className="sr-only">
+              {selectedImage?.label || "Visualizar imagem"}
+            </DialogTitle>
+            <div className="relative">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="absolute top-2 right-2 z-10 text-white hover:bg-white/20"
+                onClick={() => setImageViewerOpen(false)}
+              >
+                <X className="w-6 h-6" />
+              </Button>
+              <p className="absolute top-4 left-4 text-white font-semibold text-lg bg-black/50 px-3 py-1 rounded-full">
+                {selectedImage?.label}
+              </p>
+              {selectedImage && (
+                <img
+                  src={selectedImage.url}
+                  alt={selectedImage.label}
+                  className="w-full h-auto max-h-[80vh] object-contain rounded-lg"
+                />
+              )}
+              
+              {/* Navigation buttons */}
+              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+                {lead.reference_image_url && (
+                  <Button
+                    variant={selectedImage?.label === "Antes" ? "default" : "outline"}
+                    size="sm"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSelectedImage({ url: lead.reference_image_url!, label: "Antes" });
+                    }}
+                    className={selectedImage?.label === "Antes" ? "bg-primary" : "bg-white/10 border-white/30 text-white hover:bg-white/20"}
+                  >
+                    Antes
+                  </Button>
+                )}
+                {lead.generated_image_url && (
+                  <Button
+                    variant={selectedImage?.label === "Depois" ? "default" : "outline"}
+                    size="sm"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSelectedImage({ url: lead.generated_image_url!, label: "Depois" });
+                    }}
+                    className={selectedImage?.label === "Depois" ? "bg-primary" : "bg-white/10 border-white/30 text-white hover:bg-white/20"}
+                  >
+                    Depois
+                  </Button>
+                )}
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
       </CardContent>
     </Card>
   );
