@@ -47,7 +47,7 @@ export const LeadCard = ({ lead }: LeadCardProps) => {
       await navigator.clipboard.writeText(lead.phone);
       setCopied(true);
       toast({
-        title: "Número copiado!",
+        title: "✅ Número copiado!",
         description: "O número foi copiado para a área de transferência.",
       });
       setTimeout(() => setCopied(false), 2000);
@@ -66,45 +66,53 @@ export const LeadCard = ({ lead }: LeadCardProps) => {
       style={style}
       {...attributes}
       {...listeners}
-      className="glass-card backdrop-blur-glass border-white/20 bg-white/5 hover:bg-white/10 transition-all cursor-grab active:cursor-grabbing"
+      className="glass-card backdrop-blur-glass border-white/30 bg-[#252541]/90 hover:bg-[#2d2d4a]/90 transition-all cursor-grab active:cursor-grabbing shadow-lg hover:shadow-xl"
     >
       <CardContent className="p-4 space-y-3">
         <div>
-          <h3 className="text-white font-semibold text-lg">{lead.name}</h3>
+          <h3 className="text-white font-bold text-base">{lead.name}</h3>
         </div>
 
         <div className="space-y-2 text-sm">
-          <div className="flex items-center gap-2 text-white/80">
-            <Mail className="w-4 h-4 shrink-0" />
-            <a href={`mailto:${lead.email}`} className="hover:text-white truncate">
+          <div className="flex items-center gap-2 text-white/90">
+            <Mail className="w-4 h-4 shrink-0 text-white/70" />
+            <a 
+              href={`mailto:${lead.email}`} 
+              className="hover:text-white truncate hover:underline"
+              onClick={(e) => e.stopPropagation()}
+            >
               {lead.email}
             </a>
           </div>
           <div className="flex items-center gap-2">
-            <Phone className="w-4 h-4 shrink-0 text-white/80" />
+            <Phone className="w-4 h-4 shrink-0 text-white/70" />
             <a
               href={`https://wa.me/55${lead.phone.replace(/\D/g, "")}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:text-white text-white/80 flex-1 truncate"
+              className="hover:text-white text-white/90 flex-1 truncate hover:underline"
+              onClick={(e) => e.stopPropagation()}
             >
               {lead.phone}
             </a>
             <Button
-              onClick={copyPhone}
+              onClick={(e) => {
+                e.stopPropagation();
+                copyPhone();
+              }}
               size="sm"
               variant="ghost"
-              className="h-6 w-6 p-0 hover:bg-white/20"
+              className="h-7 w-7 p-0 hover:bg-white/20"
             >
               {copied ? (
                 <Check className="w-3 h-3 text-green-400" />
               ) : (
-                <Copy className="w-3 h-3 text-white/80" />
+                <Copy className="w-3 h-3 text-white/70" />
               )}
             </Button>
           </div>
           <div className="flex items-center gap-2 text-white/60 text-xs">
-            <Calendar className="w-4 h-4" />
+            <Calendar className="w-3 h-3" />
             {formatDate(lead.created_at)}
           </div>
         </div>
@@ -114,21 +122,21 @@ export const LeadCard = ({ lead }: LeadCardProps) => {
           <div className="grid grid-cols-2 gap-2 mt-3">
             {lead.reference_image_url && (
               <div>
-                <p className="text-white/60 text-xs mb-1 text-center">Antes</p>
+                <p className="text-white/70 text-xs mb-1 text-center font-medium">Antes</p>
                 <img
                   src={lead.reference_image_url}
                   alt="Antes"
-                  className="w-full h-32 object-cover rounded-lg border border-white/20"
+                  className="w-full h-32 object-cover rounded-lg border-2 border-white/20 shadow-md"
                 />
               </div>
             )}
             {lead.generated_image_url && (
               <div>
-                <p className="text-white/60 text-xs mb-1 text-center">Depois</p>
+                <p className="text-white/70 text-xs mb-1 text-center font-medium">Depois</p>
                 <img
                   src={lead.generated_image_url}
                   alt="Depois"
-                  className="w-full h-32 object-cover rounded-lg border border-white/20"
+                  className="w-full h-32 object-cover rounded-lg border-2 border-white/20 shadow-md"
                 />
               </div>
             )}

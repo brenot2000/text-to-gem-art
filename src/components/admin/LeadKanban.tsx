@@ -12,7 +12,9 @@ import {
   PointerSensor,
   useSensor,
   useSensors,
+  closestCenter,
 } from "@dnd-kit/core";
+import { useDroppable } from "@dnd-kit/core";
 
 type Lead = {
   id: string;
@@ -23,6 +25,53 @@ type Lead = {
   reference_image_url: string | null;
   generated_image_url: string | null;
   created_at: string;
+};
+
+const DroppableColumn = ({ 
+  id, 
+  title, 
+  color, 
+  leads, 
+  count 
+}: { 
+  id: string; 
+  title: string; 
+  color: string; 
+  leads: Lead[];
+  count: number;
+}) => {
+  const { setNodeRef, isOver } = useDroppable({
+    id: id,
+  });
+
+  return (
+    <Card
+      ref={setNodeRef}
+      className={`glass-card backdrop-blur-glass border-white/30 bg-[#1a1a2e]/80 shadow-xl transition-all ${
+        isOver ? "ring-2 ring-white/50 scale-105" : ""
+      }`}
+    >
+      <CardHeader>
+        <CardTitle className="text-white flex items-center gap-2">
+          <span className={`bg-gradient-to-r ${color} bg-clip-text text-transparent font-bold`}>
+            {title}
+          </span>
+          <span className="text-sm font-normal text-white/60 bg-white/10 px-2 py-1 rounded-full">
+            {count}
+          </span>
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-3 max-h-[calc(100vh-420px)] overflow-y-auto">
+        {leads.length > 0 ? (
+          leads.map((lead) => <LeadCard key={lead.id} lead={lead} />)
+        ) : (
+          <div className="text-center py-12 px-4">
+            <p className="text-white/40 text-sm">Arraste cards aqui</p>
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  );
 };
 
 export const LeadKanban = () => {
@@ -41,7 +90,6 @@ export const LeadKanban = () => {
   useEffect(() => {
     fetchLeads();
 
-    // Subscribe to realtime changes
     const channel = supabase
       .channel("leads_changes")
       .on(
@@ -95,8 +143,8 @@ export const LeadKanban = () => {
       if (error) throw error;
 
       toast({
-        title: "Status atualizado!",
-        description: "O status do lead foi atualizado com sucesso.",
+        title: "✅ Status atualizado!",
+        description: "O lead foi movido com sucesso.",
       });
     } catch (error: any) {
       toast({
@@ -143,7 +191,7 @@ export const LeadKanban = () => {
     { status: "foto_gerada", title: "Fotos Geradas", color: "from-purple-500 to-pink-500" },
     { status: "contato_feito", title: "Contatos Feitos", color: "from-blue-500 to-cyan-500" },
     { status: "venda_realizada", title: "Vendas Realizadas", color: "from-green-500 to-emerald-500" },
-    { status: "venda_perdida", title: "Vendas Perdidas", color: "from-red-500 to-pink-500" },
+    { status: "venda_perdida", title: "Vendas Perdidas", color: "from-red-500 to-rose-500" },
   ];
 
   const activeLead = activeId ? leads.find((l) => l.id === activeId) : null;
@@ -162,41 +210,26 @@ export const LeadKanban = () => {
 
       <DndContext
         sensors={sensors}
+        collisionDetection={closestCenter}
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
       >
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {columns.map((column) => (
-            <Card
+            <DroppableColumn
               key={column.status}
               id={column.status}
-              className="glass-card backdrop-blur-glass border-white/20 bg-white/10"
-            >
-              <CardHeader>
-                <CardTitle className={`text-white bg-gradient-to-r ${column.color} bg-clip-text text-transparent`}>
-                  {column.title}
-                  <span className="ml-2 text-sm font-normal text-white/60">
-                    ({getLeadsByStatus(column.status).length})
-                  </span>
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4 max-h-[calc(100vh-380px)] overflow-y-auto">
-                {getLeadsByStatus(column.status).map((lead) => (
-                  <LeadCard key={lead.id} lead={lead} />
-                ))}
-                {getLeadsByStatus(column.status).length === 0 && (
-                  <p className="text-white/60 text-center py-8">
-                    Nenhum lead nesta coluna
-                  </p>
-                )}
-              </CardContent>
-            </Card>
+              title={column.title}
+              color={column.color}
+              leads={getLeadsByStatus(column.status)}
+              count={getLeadsByStatus(column.status).length}
+            />
           ))}
         </div>
 
         <DragOverlay>
           {activeLead ? (
-            <div className="opacity-80">
+            <div className="opacity-90 rotate-3 scale-105">
               <LeadCard lead={activeLead} />
             </div>
           ) : null}
