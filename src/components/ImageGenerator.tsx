@@ -154,6 +154,12 @@ IMPORTANTE: Você DEVE gerar uma imagem transformada, não apenas texto. Crie um
       }
 
       if (!data || !data.success) {
+        // Verifica se atingiu o limite de 3 fotos
+        if (data?.error === 'limit_reached') {
+          toast.error(data.message || 'Você atingiu o limite de 3 gerações de fotos.');
+          throw new Error('Limit reached');
+        }
+        
         if (data?.error === 'Rate limit exceeded') {
           toast.error('Limite de uso atingido. Aguarde alguns minutos e tente novamente.');
           throw new Error('Rate limit exceeded');
@@ -178,7 +184,9 @@ IMPORTANTE: Você DEVE gerar uma imagem transformada, não apenas texto. Crie um
       console.error("Erro ao gerar imagem:", error);
 
       if (error instanceof Error) {
-        if (error.message.includes('Rate limit')) {
+        if (error.message.includes('Limit reached')) {
+          // Já mostrou o toast no bloco anterior
+        } else if (error.message.includes('Rate limit')) {
           toast.error('Limite de uso atingido. Aguarde alguns minutos.');
         } else if (error.message.includes('após 3 tentativas')) {
           toast.error('Não foi possível gerar a imagem após 3 tentativas. Tente com outra foto.');

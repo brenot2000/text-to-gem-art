@@ -27,6 +27,7 @@ type Lead = {
   created_at: string;
   vendedor: string | null;
   valor_venda: number | null;
+  fotos_geradas: number | null;
 };
 
 const DroppableColumn = ({ 
