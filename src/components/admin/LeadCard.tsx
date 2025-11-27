@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Mail, Phone, Calendar, Copy, Check, DollarSign, User, ZoomIn, X, Trash2, Image } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useDraggable } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
 import type { Lead } from "@/hooks/useAdminLeads";
@@ -43,16 +43,18 @@ export const LeadCard = ({ lead, onUpdate, onDelete, onFetchImages }: LeadCardPr
   const [imagesLoading, setImagesLoading] = useState(false);
   const [imagesFetched, setImagesFetched] = useState(false);
 
-  // Lazy load images when card becomes visible
-  useEffect(() => {
-    if (!imagesFetched && !imagesLoading) {
-      setImagesLoading(true);
-      onFetchImages(lead.id).finally(() => {
-        setImagesLoading(false);
-        setImagesFetched(true);
-      });
+  // Load images on demand when user clicks
+  const handleLoadImages = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (imagesFetched || imagesLoading) return;
+    setImagesLoading(true);
+    try {
+      await onFetchImages(lead.id);
+      setImagesFetched(true);
+    } finally {
+      setImagesLoading(false);
     }
-  }, [lead.id, imagesFetched, imagesLoading, onFetchImages]);
+  };
 
   const openImageViewer = (url: string, label: string, e: React.MouseEvent) => {
     e.stopPropagation();
@@ -268,8 +270,20 @@ export const LeadCard = ({ lead, onUpdate, onDelete, onFetchImages }: LeadCardPr
           </div>
         )}
 
-        {/* Images inline - lazy loaded */}
-        {imagesLoading ? (
+        {/* Images - loaded on demand */}
+        {!imagesFetched && !imagesLoading && (
+          <Button
+            onClick={handleLoadImages}
+            variant="outline"
+            size="sm"
+            className="w-full mt-3 bg-white/10 border-white/20 text-white hover:bg-white/20"
+          >
+            <Image className="w-4 h-4 mr-2" />
+            Ver fotos
+          </Button>
+        )}
+        
+        {imagesLoading && (
           <div className="grid grid-cols-2 gap-2 mt-3">
             <div className="h-32 bg-white/10 rounded-lg animate-pulse flex items-center justify-center">
               <Image className="w-6 h-6 text-white/30" />
@@ -278,7 +292,9 @@ export const LeadCard = ({ lead, onUpdate, onDelete, onFetchImages }: LeadCardPr
               <Image className="w-6 h-6 text-white/30" />
             </div>
           </div>
-        ) : (lead.reference_image_url || lead.generated_image_url) && (
+        )}
+        
+        {imagesFetched && (lead.reference_image_url || lead.generated_image_url) && (
           <div className="grid grid-cols-2 gap-2 mt-3">
             {lead.reference_image_url && (
               <div 
