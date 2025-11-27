@@ -74,7 +74,7 @@ const Admin = () => {
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <img src={logo} alt="Beautyness Club" className="h-8 w-auto" />
+              <img src={logo} alt="Beautyness Club" className="h-8 w-auto brightness-0 invert" />
               <div className="h-8 w-px bg-white/20"></div>
               <h1 className="text-2xl font-bold text-white">Painel Admin</h1>
             </div>
