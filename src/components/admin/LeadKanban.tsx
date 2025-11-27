@@ -90,6 +90,9 @@ export const LeadKanban = () => {
   useEffect(() => {
     fetchLeads();
 
+    // Subscrição realtime com debounce para evitar atualizações desnecessárias
+    let timeoutId: NodeJS.Timeout;
+    
     const channel = supabase
       .channel("leads_changes")
       .on(
@@ -99,13 +102,20 @@ export const LeadKanban = () => {
           schema: "public",
           table: "leads",
         },
-        () => {
-          fetchLeads();
+        (payload) => {
+          // Ignora eventos de UPDATE para evitar conflito com optimistic updates
+          if (payload.eventType !== 'UPDATE') {
+            clearTimeout(timeoutId);
+            timeoutId = setTimeout(() => {
+              fetchLeads();
+            }, 500);
+          }
         }
       )
       .subscribe();
 
     return () => {
+      clearTimeout(timeoutId);
       supabase.removeChannel(channel);
     };
   }, []);
@@ -140,7 +150,11 @@ export const LeadKanban = () => {
         .update({ status: newStatus })
         .eq("id", leadId);
 
-      if (error) throw error;
+      if (error) {
+        // Se der erro, reverte o estado local
+        fetchLeads();
+        throw error;
+      }
 
       toast({
         title: "✅ Status atualizado!",
@@ -170,6 +184,14 @@ export const LeadKanban = () => {
 
     const lead = leads.find((l) => l.id === leadId);
     if (lead && lead.status !== newStatus) {
+      // Optimistic update - atualiza o estado local imediatamente
+      setLeads(prevLeads =>
+        prevLeads.map(l =>
+          l.id === leadId ? { ...l, status: newStatus } : l
+        )
+      );
+
+      // Depois atualiza no banco de dados
       updateLeadStatus(leadId, newStatus);
     }
   };
