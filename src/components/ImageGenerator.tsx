@@ -206,30 +206,30 @@ IMPORTANTE: Você DEVE gerar uma imagem transformada, não apenas texto. Crie um
   return (
     <div className="max-w-7xl mx-auto space-y-12">
       {/* Upload Section */}
-      <Card className="glass-card backdrop-blur-glass border-white/20 bg-white/10 shadow-intense animate-fade-in-up">
+      <Card className="border-2 border-primary/20 bg-card shadow-soft animate-fade-in-up">
         <CardHeader className="text-center pb-8">
           <div className="flex justify-center mb-6">
             <div className="relative">
-              <div className="p-4 rounded-full bg-gradient-accent shadow-glow">
+              <div className="p-4 rounded-full bg-accent shadow-glow">
                 <Camera className="w-8 h-8 text-white" />
               </div>
             </div>
           </div>
-          <CardTitle className="text-3xl md:text-4xl font-bold text-white mb-4">Descubra Sua Melhor Versão</CardTitle>
-          <p className="text-white/80 text-xl">Envie sua foto e veja como você ficaria com o corpo que sempre sonhou</p>
+          <CardTitle className="text-3xl md:text-4xl font-bold text-foreground mb-4">Descubra Sua Melhor Versão</CardTitle>
+          <p className="text-muted-foreground text-xl">Envie sua foto e veja como você ficaria com o corpo que sempre sonhou</p>
         </CardHeader>
         <CardContent className="space-y-8 p-8">
           <div className="space-y-6">
-            <Label htmlFor="referenceImage" className="text-2xl font-bold text-white">
+            <Label htmlFor="referenceImage" className="text-2xl font-bold text-foreground">
               Sua Foto Atual
             </Label>
             {!referenceImage ? (
-              <div className="border-2 border-dashed border-white/30 rounded-3xl p-12 text-center bg-white/5 hover:border-white/50 hover:bg-white/10 transition-all duration-500 group">
+              <div className="border-2 border-dashed border-primary/30 rounded-3xl p-12 text-center bg-primary/5 hover:border-primary/50 hover:bg-primary/10 transition-all duration-500 group">
                 <div className="animate-float-smooth group-hover:scale-110 transition-transform duration-500">
-                  <Upload className="mx-auto h-16 w-16 text-white mb-6" />
+                  <Upload className="mx-auto h-16 w-16 text-primary mb-6" />
                 </div>
-                <h3 className="text-2xl font-bold mb-4 text-white">Faça o upload da sua foto</h3>
-                <p className="text-lg text-white/70 mb-8 max-w-md mx-auto leading-relaxed">
+                <h3 className="text-2xl font-bold mb-4 text-foreground">Faça o upload da sua foto</h3>
+                <p className="text-lg text-muted-foreground mb-8 max-w-md mx-auto leading-relaxed">
                   Siga o tutorial acima para uma foto perfeita e resultados mais precisos
                 </p>
                 <Input
@@ -242,7 +242,7 @@ IMPORTANTE: Você DEVE gerar uma imagem transformada, não apenas texto. Crie um
                 <Button
                   type="button"
                   size="lg"
-                  className="bg-gradient-primary shadow-intense hover:shadow-glow transition-all duration-300 text-lg px-8 py-4 h-auto animate-glow-border"
+                  className="bg-primary text-white shadow-soft hover:shadow-glow transition-all duration-300 text-lg px-8 py-4 h-auto"
                   onClick={() => document.getElementById("referenceImage")?.click()}
                 >
                   <Upload className="w-6 h-6 mr-3" />
@@ -250,31 +250,31 @@ IMPORTANTE: Você DEVE gerar uma imagem transformada, não apenas texto. Crie um
                 </Button>
               </div>
             ) : (
-              <div className="relative border-2 border-white/30 rounded-3xl p-8 bg-white/10 animate-fade-in-up">
+              <div className="relative border-2 border-primary/30 rounded-3xl p-8 bg-card animate-fade-in-up">
                 <div className="flex items-start gap-8">
                   <div className="relative">
                     <img
                       src={referenceImage}
                       alt="Sua foto atual"
-                      className="w-40 h-40 object-cover rounded-2xl shadow-intense border-2 border-white/30"
+                      className="w-40 h-40 object-cover rounded-2xl shadow-soft border-2 border-primary/30"
                     />
-                    <div className="absolute -top-3 -right-3 p-2 rounded-full bg-gradient-secondary shadow-glow">
+                    <div className="absolute -top-3 -right-3 p-2 rounded-full bg-secondary shadow-glow">
                       <Sparkles className="w-5 h-5 text-white" />
                     </div>
                   </div>
                   <div className="flex-1">
-                    <h4 className="text-2xl font-bold text-white mb-3">Foto carregada com sucesso!</h4>
-                    <p className="text-lg text-white/80 mb-2">{referenceFile?.name}</p>
-                    <p className="text-white/60">Tamanho: {Math.round((referenceFile?.size || 0) / 1024)}KB</p>
+                    <h4 className="text-2xl font-bold text-foreground mb-3">Foto carregada com sucesso!</h4>
+                    <p className="text-lg text-muted-foreground mb-2">{referenceFile?.name}</p>
+                    <p className="text-muted-foreground">Tamanho: {Math.round((referenceFile?.size || 0) / 1024)}KB</p>
                   </div>
                   <Button
                     type="button"
                     variant="outline"
                     size="icon"
                     onClick={removeReferenceImage}
-                    className="shrink-0 border-white/30 hover:border-red-400 hover:bg-red-500/20 bg-white/10 backdrop-blur-sm"
+                    className="shrink-0 border-border hover:border-destructive hover:bg-destructive/20"
                   >
-                    <X className="h-5 w-5 text-white" />
+                    <X className="h-5 w-5 text-foreground" />
                   </Button>
                 </div>
               </div>
@@ -285,7 +285,7 @@ IMPORTANTE: Você DEVE gerar uma imagem transformada, não apenas texto. Crie um
             onClick={handleShowDataForm}
             disabled={isLoading || !referenceFile}
             size="lg"
-            className="w-full bg-gradient-hero shadow-intense hover:shadow-glow transition-all duration-500 text-xl px-8 py-6 h-auto animate-glow-border disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full bg-primary text-white shadow-soft hover:shadow-glow transition-all duration-500 text-xl px-8 py-6 h-auto disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isLoading ? (
               <>
@@ -304,66 +304,65 @@ IMPORTANTE: Você DEVE gerar uma imagem transformada, não apenas texto. Crie um
 
       {/* Results Section */}
       {generatedImage && (
-        <Card className="glass-card backdrop-blur-glass border-white/20 bg-white/10 shadow-intense animate-fade-in-up">
+        <Card className="border-2 border-primary/20 bg-card shadow-soft animate-fade-in-up">
           <CardHeader className="text-center pb-8">
             <div className="flex justify-center mb-6">
               <div className="relative">
-                <div className="p-4 rounded-full bg-gradient-warm shadow-glow">
+                <div className="p-4 rounded-full bg-primary shadow-glow">
                   <Sparkles className="w-8 h-8 text-white" />
                 </div>
               </div>
             </div>
-            <CardTitle className="text-3xl md:text-4xl font-bold bg-gradient-warm bg-clip-text text-transparent mb-4">
+            <CardTitle className="text-3xl md:text-4xl font-bold text-primary mb-4">
               Sua Melhor Versão Revelada
             </CardTitle>
-            <p className="text-white/80 text-xl">Compare e veja a diferença - esta poderia ser você em 30 dias!</p>
+            <p className="text-muted-foreground text-xl">Compare e veja a diferença - esta poderia ser você em 30 dias!</p>
           </CardHeader>
           <CardContent className="p-8">
             <div className="grid lg:grid-cols-2 gap-12">
               {/* Before Image */}
               <div className="space-y-6 animate-slide-in-left">
                 <div className="text-center">
-                  <h3 className="text-2xl font-bold text-white/70 mb-4">ANTES</h3>
-                  <div className="w-24 h-1 bg-white/30 mx-auto rounded-full"></div>
+                  <h3 className="text-2xl font-bold text-muted-foreground mb-4">ANTES</h3>
+                  <div className="w-24 h-1 bg-border mx-auto rounded-full"></div>
                 </div>
                 <div className="relative group">
                   <img
                     src={referenceImage}
                     alt="Sua foto original"
-                    className="w-full rounded-3xl shadow-intense border-2 border-white/20 group-hover:shadow-glow transition-all duration-500"
+                    className="w-full rounded-3xl shadow-soft border-2 border-border group-hover:shadow-glow transition-all duration-500"
                   />
-                  <div className="absolute inset-0 rounded-3xl bg-black/10 group-hover:bg-black/0 transition-all duration-500"></div>
                 </div>
               </div>
 
               {/* After Image */}
               <div className="space-y-6 animate-slide-in-right">
                 <div className="text-center">
-                  <h3 className="text-2xl font-bold bg-gradient-warm bg-clip-text text-transparent mb-4">DEPOIS</h3>
-                  <div className="w-24 h-1 bg-gradient-warm mx-auto rounded-full shadow-glow"></div>
+                  <h3 className="text-2xl font-bold text-primary mb-4">DEPOIS</h3>
+                  <div className="w-24 h-1 bg-primary mx-auto rounded-full shadow-glow"></div>
                 </div>
                 <div className="relative group">
                   <img
                     src={generatedImage}
                     alt="Sua transformação fitness"
-                    className="w-full rounded-3xl shadow-intense border-2 border-white/30 group-hover:shadow-glow transition-all duration-500"
+                    className="w-full rounded-3xl shadow-soft border-2 border-primary/30 group-hover:shadow-glow transition-all duration-500"
                   />
                 </div>
               </div>
             </div>
 
             <div
-              className="text-center mt-12 p-10 bg-gradient-hero rounded-3xl shadow-intense animate-fade-in-up"
+              className="text-center mt-12 p-10 bg-primary/10 border-2 border-primary/20 rounded-3xl shadow-soft animate-fade-in-up"
               style={{ animationDelay: "0.5s" }}
             >
-              <h4 className="text-3xl md:text-4xl font-bold mb-6 text-white">
+              <h4 className="text-3xl md:text-4xl font-bold mb-6 text-foreground">
                 ✨ Sabia que nós podemos te ajudar a ter esse resultado?
               </h4>
-              <p className="text-white/90 text-xl leading-relaxed mb-6 max-w-3xl mx-auto">
+              <p className="text-foreground text-xl leading-relaxed mb-6 max-w-3xl mx-auto">
                 Esta visualização mostra seu potencial real. Com o acompanhamento certo, você pode transformar essa
                 visão em realidade.
               </p>
-              <p className="text-white/70 text-lg">
+              <p className="text-muted-foreground text-lg">
                 Cada jornada é única. Os resultados podem variar de acordo com dedicação e cuidados individuais.
               </p>
             </div>
@@ -373,23 +372,23 @@ IMPORTANTE: Você DEVE gerar uma imagem transformada, não apenas texto. Crie um
 
       {/* Data Collection Dialog */}
       <Dialog open={showDataForm} onOpenChange={setShowDataForm}>
-        <DialogContent className="glass-card backdrop-blur-glass border-white/20 bg-white/10 shadow-intense max-w-md animate-scale-in">
+        <DialogContent className="border-2 border-primary/20 bg-card shadow-soft max-w-md">
           <DialogHeader className="text-center pb-2">
             <div className="flex justify-center mb-4">
               <div className="relative">
-                <div className="p-3 rounded-full bg-gradient-accent shadow-glow">
+                <div className="p-3 rounded-full bg-accent shadow-glow">
                   <Sparkles className="w-6 h-6 text-white" />
                 </div>
               </div>
             </div>
-            <DialogTitle className="text-2xl font-bold text-white mb-2">
+            <DialogTitle className="text-2xl font-bold text-foreground mb-2">
               Informe seus dados para ver o resultado gratuitamente
             </DialogTitle>
-            <p className="text-white/70 text-sm">Seus dados são seguros e privados conosco</p>
+            <p className="text-muted-foreground text-sm">Seus dados são seguros e privados conosco</p>
           </DialogHeader>
           <div className="space-y-6 pt-6">
             <div className="space-y-3">
-              <Label htmlFor="userName" className="text-sm font-medium text-white">
+              <Label htmlFor="userName" className="text-sm font-medium text-foreground">
                 Nome completo
               </Label>
               <Input
@@ -398,11 +397,11 @@ IMPORTANTE: Você DEVE gerar uma imagem transformada, não apenas texto. Crie um
                 placeholder="Seu nome completo"
                 value={userData.name}
                 onChange={(e) => handleUserDataChange("name", e.target.value)}
-                className="bg-white/10 border-white/30 text-white placeholder:text-white/50 focus:border-white/50 focus:bg-white/15 backdrop-blur-sm h-12"
+                className="bg-card border-border text-foreground placeholder:text-muted-foreground focus:border-primary h-12"
               />
             </div>
             <div className="space-y-3">
-              <Label htmlFor="userEmail" className="text-sm font-medium text-white">
+              <Label htmlFor="userEmail" className="text-sm font-medium text-foreground">
                 Email
               </Label>
               <Input
@@ -411,11 +410,11 @@ IMPORTANTE: Você DEVE gerar uma imagem transformada, não apenas texto. Crie um
                 placeholder="seu@email.com"
                 value={userData.email}
                 onChange={(e) => handleUserDataChange("email", e.target.value)}
-                className="bg-white/10 border-white/30 text-white placeholder:text-white/50 focus:border-white/50 focus:bg-white/15 backdrop-blur-sm h-12"
+                className="bg-card border-border text-foreground placeholder:text-muted-foreground focus:border-primary h-12"
               />
             </div>
             <div className="space-y-3">
-              <Label htmlFor="userPhone" className="text-sm font-medium text-white">
+              <Label htmlFor="userPhone" className="text-sm font-medium text-foreground">
                 Telefone/WhatsApp
               </Label>
               <Input
@@ -424,20 +423,20 @@ IMPORTANTE: Você DEVE gerar uma imagem transformada, não apenas texto. Crie um
                 placeholder="(11) 99999-9999"
                 value={userData.phone}
                 onChange={(e) => handleUserDataChange("phone", e.target.value)}
-                className="bg-white/10 border-white/30 text-white placeholder:text-white/50 focus:border-white/50 focus:bg-white/15 backdrop-blur-sm h-12"
+                className="bg-card border-border text-foreground placeholder:text-muted-foreground focus:border-primary h-12"
               />
             </div>
             <div className="flex gap-4 pt-6">
               <Button
                 variant="outline"
                 onClick={() => setShowDataForm(false)}
-                className="flex-1 border-white/30 bg-white/10 hover:bg-white/20 text-white backdrop-blur-sm h-12"
+                className="flex-1 border-border bg-card hover:bg-muted text-foreground h-12"
               >
                 Cancelar
               </Button>
               <Button
                 onClick={handleSubmitDataForm}
-                className="flex-1 bg-gradient-hero shadow-intense hover:shadow-glow transition-all duration-300 animate-glow-border h-12 text-white font-semibold"
+                className="flex-1 bg-primary text-white shadow-soft hover:shadow-glow transition-all duration-300 h-12 font-semibold"
               >
                 <Zap className="w-4 h-4 mr-2" />
                 Gerar Resultado

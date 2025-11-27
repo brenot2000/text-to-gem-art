@@ -17,8 +17,8 @@ const Index = () => {
       <div className="relative">
         <div className="container mx-auto px-6 py-24 text-center relative z-10">
           <div className="animate-fade-in-up max-w-5xl mx-auto">
-            <div className="flex justify-center mb-8">
-              <img src={logo} alt="Beautyness Club" className="h-12 w-auto" />
+            <div className="flex justify-center mb-8 relative z-50">
+              <img src={logo} alt="Beautyness Club" className="h-12 w-auto drop-shadow-lg" />
             </div>
             <h1 className="text-6xl md:text-7xl font-bold mb-8 leading-tight text-foreground">
               Se veja mais magra com
