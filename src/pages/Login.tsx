@@ -58,12 +58,12 @@ const Login = () => {
 
   return (
     <div className="min-h-screen bg-gradient-hero flex items-center justify-center p-6">
-      <Card className="glass-card backdrop-blur-glass border-white/20 bg-white/10 max-w-md w-full">
+      <Card className="backdrop-blur-xl border-border/30 bg-card/95 shadow-2xl max-w-md w-full">
         <CardHeader className="text-center">
           <div className="flex justify-center mb-4">
-            <img src={logo} alt="Beautyness Club" className="h-10 w-auto brightness-0 invert" />
+            <img src={logo} alt="Beautyness Club" className="h-10 w-auto" />
           </div>
-          <CardTitle className="text-3xl font-bold text-white">
+          <CardTitle className="text-3xl font-bold text-foreground">
             Admin Login
           </CardTitle>
         </CardHeader>
@@ -75,7 +75,7 @@ const Login = () => {
                 placeholder="Email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="glass-card backdrop-blur-glass border-white/20 bg-white/10 text-white placeholder:text-white/60"
+                className="bg-background border-border text-foreground placeholder:text-muted-foreground"
                 required
               />
             </div>
@@ -85,14 +85,14 @@ const Login = () => {
                 placeholder="Senha"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="glass-card backdrop-blur-glass border-white/20 bg-white/10 text-white placeholder:text-white/60"
+                className="bg-background border-border text-foreground placeholder:text-muted-foreground"
                 required
               />
             </div>
             <Button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-gradient-primary hover:shadow-glow"
+              className="w-full bg-gradient-primary hover:shadow-glow text-primary-foreground"
             >
               {isLoading ? "Entrando..." : "Entrar"}
             </Button>
