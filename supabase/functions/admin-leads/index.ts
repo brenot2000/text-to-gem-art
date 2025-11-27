@@ -89,7 +89,22 @@ serve(async (req) => {
 
     const { method } = req;
     const url = new URL(req.url);
-    const action = url.searchParams.get("action") || "list";
+    
+    // Parse action from URL params or body
+    let action = url.searchParams.get("action") || "list";
+    let bodyData: any = null;
+    
+    // For POST requests, check body for action
+    if (method === "POST") {
+      try {
+        bodyData = await req.clone().json();
+        if (bodyData?.action) {
+          action = bodyData.action;
+        }
+      } catch {
+        // Body parsing failed, use default action
+      }
+    }
 
     // Handle different actions
     if (method === "GET" && action === "list") {
@@ -115,9 +130,9 @@ serve(async (req) => {
       );
     }
 
-    if (method === "GET" && action === "get-images") {
-      // Get images for a specific lead
-      const leadId = url.searchParams.get("id");
+    if (action === "get-images") {
+      // Get images for a specific lead (supports GET with query param or POST with body)
+      const leadId = url.searchParams.get("id") || bodyData?.id;
       if (!leadId) {
         return new Response(
           JSON.stringify({ error: "Lead ID required" }),

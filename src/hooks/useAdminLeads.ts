@@ -75,15 +75,13 @@ export const useAdminLeads = () => {
 
       if (!token) return null;
 
-      const { data, error } = await supabase.functions.invoke(
-        `admin-leads?action=get-images&id=${leadId}`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const { data, error } = await supabase.functions.invoke("admin-leads", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: { action: "get-images", id: leadId },
+      });
 
       if (error || data?.error) return null;
 
