@@ -13,9 +13,9 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Mail, Phone, Calendar, Copy, Check, DollarSign, User, ZoomIn, X, Trash2 } from "lucide-react";
+import { Mail, Phone, Calendar, Copy, Check, DollarSign, User, ZoomIn, X, Trash2, Image } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useDraggable } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
 import type { Lead } from "@/hooks/useAdminLeads";
@@ -24,9 +24,10 @@ type LeadCardProps = {
   lead: Lead;
   onUpdate: (id: string, updates: Partial<Lead>) => Promise<boolean>;
   onDelete: (id: string) => Promise<boolean>;
+  onFetchImages: (id: string) => Promise<any>;
 };
 
-export const LeadCard = ({ lead, onUpdate, onDelete }: LeadCardProps) => {
+export const LeadCard = ({ lead, onUpdate, onDelete, onFetchImages }: LeadCardProps) => {
   const [copied, setCopied] = useState(false);
   const [vendedor, setVendedor] = useState(lead.vendedor || "");
   const [valorVenda, setValorVenda] = useState(
@@ -39,6 +40,19 @@ export const LeadCard = ({ lead, onUpdate, onDelete }: LeadCardProps) => {
   const [selectedImage, setSelectedImage] = useState<{ url: string; label: string } | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [imagesLoading, setImagesLoading] = useState(false);
+  const [imagesFetched, setImagesFetched] = useState(false);
+
+  // Lazy load images when card becomes visible
+  useEffect(() => {
+    if (!imagesFetched && !imagesLoading) {
+      setImagesLoading(true);
+      onFetchImages(lead.id).finally(() => {
+        setImagesLoading(false);
+        setImagesFetched(true);
+      });
+    }
+  }, [lead.id, imagesFetched, imagesLoading, onFetchImages]);
 
   const openImageViewer = (url: string, label: string, e: React.MouseEvent) => {
     e.stopPropagation();
@@ -254,8 +268,17 @@ export const LeadCard = ({ lead, onUpdate, onDelete }: LeadCardProps) => {
           </div>
         )}
 
-        {/* Images inline */}
-        {(lead.reference_image_url || lead.generated_image_url) && (
+        {/* Images inline - lazy loaded */}
+        {imagesLoading ? (
+          <div className="grid grid-cols-2 gap-2 mt-3">
+            <div className="h-32 bg-white/10 rounded-lg animate-pulse flex items-center justify-center">
+              <Image className="w-6 h-6 text-white/30" />
+            </div>
+            <div className="h-32 bg-white/10 rounded-lg animate-pulse flex items-center justify-center">
+              <Image className="w-6 h-6 text-white/30" />
+            </div>
+          </div>
+        ) : (lead.reference_image_url || lead.generated_image_url) && (
           <div className="grid grid-cols-2 gap-2 mt-3">
             {lead.reference_image_url && (
               <div 
