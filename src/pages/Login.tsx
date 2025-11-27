@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "@/hooks/use-toast";
 import { Heart } from "lucide-react";
+import logo from "@/assets/logo.png";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -60,7 +61,7 @@ const Login = () => {
       <Card className="glass-card backdrop-blur-glass border-white/20 bg-white/10 max-w-md w-full">
         <CardHeader className="text-center">
           <div className="flex justify-center mb-4">
-            <Heart className="w-12 h-12 text-white" />
+            <img src={logo} alt="Beautyness Club" className="h-10 w-auto" />
           </div>
           <CardTitle className="text-3xl font-bold text-white">
             Admin Login
