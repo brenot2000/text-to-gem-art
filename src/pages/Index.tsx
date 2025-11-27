@@ -185,7 +185,7 @@ const Index = () => {
       {/* Footer */}
       <div className="text-center py-16 text-muted-foreground border-t border-border bg-card/50 backdrop-blur-glass relative z-10">
         <div className="container mx-auto px-6">
-          <p className="text-lg">Criado e desenvolvido por Breno Santos</p>
+          <p className="text-lg">Beautyness Club - CNPJ: 31.009.678/0001-69</p>
         </div>
       </div>
     </div>
