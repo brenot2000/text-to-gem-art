@@ -10,25 +10,25 @@ All colors MUST be HSL.
   :root {
     /* Beautyness Club palette */
     --background: 30 25% 95%; /* F4F1ED */
-    --foreground: 30 33% 30%;
+    --foreground: 30 15% 20%; /* Texto escuro para legibilidade */
 
     --card: 0 0% 100%; /* FFFFFF */
-    --card-foreground: 30 33% 30%;
+    --card-foreground: 30 15% 20%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 30 33% 30%;
+    --popover-foreground: 30 15% 20%;
 
     --primary: 345 77% 87%; /* F7C4D3 - rosa */
-    --primary-foreground: 30 33% 30%;
+    --primary-foreground: 30 15% 20%;
 
-    --secondary: 30 33% 65%; /* BFA88A - bege */
+    --secondary: 30 33% 40%; /* BFA88A mais escuro para texto */
     --secondary-foreground: 0 0% 100%;
 
     --muted: 30 25% 90%;
-    --muted-foreground: 30 33% 50%;
+    --muted-foreground: 30 15% 35%;
 
     --accent: 190 50% 83%; /* BEE1E8 - azul claro */
-    --accent-foreground: 30 33% 30%;
+    --accent-foreground: 30 15% 20%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
@@ -39,13 +39,13 @@ All colors MUST be HSL.
 
     --radius: 1.5rem;
 
-    /* Beautyness Club gradients */
-    --gradient-primary: linear-gradient(135deg, #F7C4D3 0%, #BFA88A 100%);
-    --gradient-secondary: linear-gradient(135deg, #BEE1E8 0%, #F7C4D3 100%);
-    --gradient-accent: linear-gradient(135deg, #F4F1ED 0%, #BEE1E8 100%);
-    --gradient-warm: linear-gradient(135deg, #F7C4D3 0%, #BFA88A 100%);
-    --gradient-cool: linear-gradient(135deg, #BEE1E8 0%, #F4F1ED 100%);
-    --gradient-hero: linear-gradient(135deg, #BEE1E8 0%, #F7C4D3 50%, #BFA88A 100%);
+    /* Beautyness Club gradients - mais vibrantes */
+    --gradient-primary: linear-gradient(135deg, #F7C4D3 0%, #E8A5B8 100%);
+    --gradient-secondary: linear-gradient(135deg, #BEE1E8 0%, #96CAD6 100%);
+    --gradient-accent: linear-gradient(135deg, #F4F1ED 0%, #E5DED6 100%);
+    --gradient-warm: linear-gradient(135deg, #F7C4D3 0%, #D4A68B 100%);
+    --gradient-cool: linear-gradient(135deg, #BEE1E8 0%, #A8D4E0 100%);
+    --gradient-hero: linear-gradient(135deg, #BEE1E8 0%, #E8C9D9 50%, #F4E8E1 100%);
     
     /* Glassmorphism effects */
     --glass-bg: rgba(255, 255, 255, 0.15);
