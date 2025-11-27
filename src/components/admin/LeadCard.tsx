@@ -27,7 +27,11 @@ type LeadCardProps = {
 export const LeadCard = ({ lead }: LeadCardProps) => {
   const [copied, setCopied] = useState(false);
   const [vendedor, setVendedor] = useState(lead.vendedor || "");
-  const [valorVenda, setValorVenda] = useState(lead.valor_venda?.toString() || "");
+  const [valorVenda, setValorVenda] = useState(
+    lead.valor_venda 
+      ? lead.valor_venda.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+      : ""
+  );
   const [isSaving, setIsSaving] = useState(false);
 
   const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
@@ -68,10 +72,34 @@ export const LeadCard = ({ lead }: LeadCardProps) => {
     }
   };
 
+  const formatCurrency = (value: string) => {
+    // Remove tudo que não é número
+    const numero = value.replace(/\D/g, "");
+    
+    if (!numero) return "";
+    
+    // Converte para número e divide por 100 para ter os centavos
+    const valorNumerico = parseFloat(numero) / 100;
+    
+    // Formata como moeda brasileira
+    return valorNumerico.toLocaleString("pt-BR", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+  };
+
+  const handleValorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const valorFormatado = formatCurrency(e.target.value);
+    setValorVenda(valorFormatado);
+  };
+
   const handleUpdateVenda = async () => {
     setIsSaving(true);
     try {
-      const valorNumerico = valorVenda ? parseFloat(valorVenda.replace(",", ".")) : null;
+      // Converte o valor formatado (1.234,56) para número (1234.56)
+      const valorNumerico = valorVenda 
+        ? parseFloat(valorVenda.replace(/\./g, "").replace(",", "."))
+        : null;
       
       const { error } = await supabase
         .from("leads")
@@ -181,17 +209,22 @@ export const LeadCard = ({ lead }: LeadCardProps) => {
             <div className="space-y-1">
               <Label className="text-white/80 text-xs flex items-center gap-1">
                 <DollarSign className="w-3 h-3" />
-                Valor da Venda
+                Valor da Venda (R$)
               </Label>
-              <Input
-                value={valorVenda}
-                onChange={(e) => setValorVenda(e.target.value)}
-                onBlur={handleBlur}
-                placeholder="0,00"
-                type="text"
-                className="h-8 bg-white/10 border-white/20 text-white text-sm placeholder:text-white/40"
-                disabled={isSaving}
-              />
+              <div className="relative">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-white/60 text-sm">
+                  R$
+                </span>
+                <Input
+                  value={valorVenda}
+                  onChange={handleValorChange}
+                  onBlur={handleBlur}
+                  placeholder="0,00"
+                  type="text"
+                  className="h-8 bg-white/10 border-white/20 text-white text-sm placeholder:text-white/40 pl-10"
+                  disabled={isSaving}
+                />
+              </div>
             </div>
           </div>
         )}
