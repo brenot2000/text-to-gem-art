@@ -18,25 +18,15 @@ import { toast } from "@/hooks/use-toast";
 import { useState } from "react";
 import { useDraggable } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
-import { supabase } from "@/integrations/supabase/client";
+import type { Lead } from "@/hooks/useAdminLeads";
 
 type LeadCardProps = {
-  lead: {
-    id: string;
-    name: string;
-    email: string;
-    phone: string;
-    status: "foto_gerada" | "contato_feito" | "venda_realizada" | "venda_perdida";
-    reference_image_url: string | null;
-    generated_image_url: string | null;
-    created_at: string;
-    vendedor: string | null;
-    valor_venda: number | null;
-    fotos_geradas: number | null;
-  };
+  lead: Lead;
+  onUpdate: (id: string, updates: Partial<Lead>) => Promise<boolean>;
+  onDelete: (id: string) => Promise<boolean>;
 };
 
-export const LeadCard = ({ lead }: LeadCardProps) => {
+export const LeadCard = ({ lead, onUpdate, onDelete }: LeadCardProps) => {
   const [copied, setCopied] = useState(false);
   const [vendedor, setVendedor] = useState(lead.vendedor || "");
   const [valorVenda, setValorVenda] = useState(
@@ -58,28 +48,9 @@ export const LeadCard = ({ lead }: LeadCardProps) => {
 
   const handleDelete = async () => {
     setIsDeleting(true);
-    try {
-      const { error } = await supabase
-        .from("leads")
-        .delete()
-        .eq("id", lead.id);
-
-      if (error) throw error;
-
-      toast({
-        title: "✅ Lead deletado!",
-        description: "O card foi removido com sucesso.",
-      });
-    } catch (error: any) {
-      toast({
-        title: "Erro ao deletar",
-        description: error.message,
-        variant: "destructive",
-      });
-    } finally {
-      setIsDeleting(false);
-      setDeleteDialogOpen(false);
-    }
+    await onDelete(lead.id);
+    setIsDeleting(false);
+    setDeleteDialogOpen(false);
   };
 
   const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
@@ -121,15 +92,9 @@ export const LeadCard = ({ lead }: LeadCardProps) => {
   };
 
   const formatCurrency = (value: string) => {
-    // Remove tudo que não é número
     const numero = value.replace(/\D/g, "");
-    
     if (!numero) return "";
-    
-    // Converte para número e divide por 100 para ter os centavos
     const valorNumerico = parseFloat(numero) / 100;
-    
-    // Formata como moeda brasileira
     return valorNumerico.toLocaleString("pt-BR", {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
@@ -144,20 +109,14 @@ export const LeadCard = ({ lead }: LeadCardProps) => {
   const handleUpdateVenda = async () => {
     setIsSaving(true);
     try {
-      // Converte o valor formatado (1.234,56) para número (1234.56)
       const valorNumerico = valorVenda 
         ? parseFloat(valorVenda.replace(/\./g, "").replace(",", "."))
         : null;
       
-      const { error } = await supabase
-        .from("leads")
-        .update({
-          vendedor: vendedor || null,
-          valor_venda: valorNumerico,
-        })
-        .eq("id", lead.id);
-
-      if (error) throw error;
+      await onUpdate(lead.id, {
+        vendedor: vendedor || null,
+        valor_venda: valorNumerico,
+      });
 
       toast({
         title: "✅ Dados atualizados!",
