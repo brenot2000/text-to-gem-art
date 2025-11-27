@@ -18,7 +18,7 @@ const Index = () => {
         <div className="container mx-auto px-6 py-24 text-center relative z-10">
           <div className="animate-fade-in-up max-w-5xl mx-auto">
             <div className="flex justify-center mb-8 relative z-50">
-              <img src={logo} alt="Beautyness Club" className="h-12 w-auto drop-shadow-lg" />
+              <img src={logo} alt="Beautyness Club" className="h-12 w-auto drop-shadow-lg brightness-0 invert" />
             </div>
             <h1 className="text-6xl md:text-7xl font-bold mb-8 leading-tight text-foreground">
               Se veja mais magra com
@@ -79,7 +79,7 @@ const Index = () => {
           </h2>
           <div className="animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
             <img 
-              src="/lovable-uploads/35df97ed-1871-47d7-bfef-6ba2a1f506e5.png" 
+              src="/lovable-uploads/exemplo-resultado.png" 
               alt="Exemplo real de transformação - antes e depois"
               className="w-full max-w-4xl mx-auto rounded-3xl shadow-intense border-2 border-primary/20"
             />

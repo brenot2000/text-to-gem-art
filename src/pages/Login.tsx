@@ -61,7 +61,7 @@ const Login = () => {
       <Card className="glass-card backdrop-blur-glass border-white/20 bg-white/10 max-w-md w-full">
         <CardHeader className="text-center">
           <div className="flex justify-center mb-4">
-            <img src={logo} alt="Beautyness Club" className="h-10 w-auto" />
+            <img src={logo} alt="Beautyness Club" className="h-10 w-auto brightness-0 invert" />
           </div>
           <CardTitle className="text-3xl font-bold text-white">
             Admin Login
