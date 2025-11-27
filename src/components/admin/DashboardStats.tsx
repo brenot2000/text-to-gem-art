@@ -108,7 +108,7 @@ export const DashboardStats = ({ stats, leads }: DashboardStatsProps) => {
   return (
     <div className="space-y-6 mb-8">
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
         <Card className="glass-card backdrop-blur-glass border-white/30 bg-[#1a1a2e]/80 shadow-xl">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
@@ -167,20 +167,6 @@ export const DashboardStats = ({ stats, leads }: DashboardStatsProps) => {
 
         <Card className="glass-card backdrop-blur-glass border-white/30 bg-[#1a1a2e]/80 shadow-xl">
           <CardContent className="p-6">
-            <div className="flex items-center justify-between gap-3">
-              <div className="min-w-0 flex-1">
-                <p className="text-white/80 text-sm mb-1 font-medium">Valor Total</p>
-                <p className="text-2xl lg:text-3xl font-bold text-green-400 truncate">{formatCurrency(valorTotal)}</p>
-              </div>
-              <div className="p-3 rounded-full shrink-0" style={{ background: "linear-gradient(135deg, #10b981 0%, #059669 100%)" }}>
-                <DollarSign className="w-6 h-6 text-white" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="glass-card backdrop-blur-glass border-white/30 bg-[#1a1a2e]/80 shadow-xl">
-          <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-white/80 text-sm mb-1 font-medium">Taxa de Conversão</p>
@@ -226,10 +212,16 @@ export const DashboardStats = ({ stats, leads }: DashboardStatsProps) => {
 
         <Card className="glass-card backdrop-blur-glass border-white/30 bg-[#1a1a2e]/80 shadow-xl">
           <CardHeader>
-            <CardTitle className="text-white text-xl font-bold flex items-center gap-2">
-              <Users className="w-5 h-5" />
-              Vendas por Vendedor
-            </CardTitle>
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-white text-xl font-bold flex items-center gap-2">
+                <Users className="w-5 h-5" />
+                Vendas por Vendedor
+              </CardTitle>
+              <div className="flex items-center gap-2 px-4 py-2 rounded-full" style={{ background: "linear-gradient(135deg, #10b981 0%, #059669 100%)" }}>
+                <DollarSign className="w-5 h-5 text-white" />
+                <span className="text-white font-bold text-lg">{formatCurrency(valorTotal)}</span>
+              </div>
+            </div>
           </CardHeader>
           <CardContent>
             {vendedoresData.length > 0 ? (
