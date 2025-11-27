@@ -85,28 +85,6 @@ export const ImageGenerator = () => {
     setReferenceFile(null);
   };
 
-  const clearCache = () => {
-    // Limpa images em cache
-    if (referenceImage) {
-      URL.revokeObjectURL(referenceImage);
-    }
-    if (generatedImage && generatedImage.startsWith('blob:')) {
-      URL.revokeObjectURL(generatedImage);
-    }
-    
-    // Reseta todos os estados
-    setReferenceImage(null);
-    setReferenceFile(null);
-    setGeneratedImage(null);
-    setUserData({ name: "", email: "", phone: "" });
-    setIsLoading(false);
-    setShowDataForm(false);
-    
-    // Limpa localStorage se houver
-    localStorage.clear();
-    
-    toast.success("Cache limpo com sucesso!");
-  };
 
   const handleShowDataForm = () => {
     if (!referenceFile) {
@@ -160,12 +138,13 @@ IMPORTANTE: Você DEVE gerar uma imagem transformada, não apenas texto. Crie um
 
       console.log('Calling edge function to generate image...');
 
-      // Call edge function instead of API directly
+      // Call edge function with user data
       const { data, error } = await supabase.functions.invoke('generate-fitness-image', {
         body: {
           imageData,
           mimeType,
           prompt: enhancedPrompt,
+          userData: userData,
         },
       });
 
@@ -193,7 +172,7 @@ IMPORTANTE: Você DEVE gerar uma imagem transformada, não apenas texto. Crie um
       // Success - construct image URL from base64 data
       const imageUrl = `data:${data.mimeType};base64,${data.imageData}`;
       setGeneratedImage(imageUrl);
-      toast.success("Imagem gerada com sucesso!");
+      toast.success("Transformação concluída! Saiba que nós podemos te ajudar a ter esse resultado!");
 
     } catch (error) {
       console.error("Erro ao gerar imagem:", error);
@@ -312,17 +291,6 @@ IMPORTANTE: Você DEVE gerar uma imagem transformada, não apenas texto. Crie um
               </>
             )}
           </Button>
-
-          {(referenceImage || generatedImage) && (
-            <Button
-              onClick={clearCache}
-              variant="outline"
-              size="lg"
-              className="w-full border-white/30 bg-white/10 hover:bg-white/20 text-white backdrop-blur-sm"
-            >
-              Limpar Cache e Recomeçar
-            </Button>
-          )}
         </CardContent>
       </Card>
 
