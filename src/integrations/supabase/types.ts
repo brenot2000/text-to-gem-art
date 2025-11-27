@@ -85,6 +85,29 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_leads_for_admin: {
+        Args: never
+        Returns: {
+          created_at: string | null
+          email: string
+          fotos_geradas: number | null
+          generated_image_url: string | null
+          id: string
+          name: string
+          phone: string
+          reference_image_url: string | null
+          status: Database["public"]["Enums"]["lead_status"]
+          updated_at: string | null
+          valor_venda: number | null
+          vendedor: string | null
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "leads"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]

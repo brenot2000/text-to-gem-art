@@ -132,13 +132,12 @@ export const LeadKanban = () => {
 
   const fetchLeads = async () => {
     try {
+      // Using security definer function to bypass RLS timeout issues
       const { data, error } = await supabase
-        .from("leads")
-        .select("*")
-        .order("created_at", { ascending: false });
+        .rpc("get_leads_for_admin");
 
       if (error) throw error;
-      setLeads(data || []);
+      setLeads((data as Lead[]) || []);
     } catch (error: any) {
       toast({
         title: "Erro ao carregar leads",
