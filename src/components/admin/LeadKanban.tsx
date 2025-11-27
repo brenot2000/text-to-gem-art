@@ -64,7 +64,7 @@ const DroppableColumn = ({
           </span>
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-3 max-h-[calc(100vh-420px)] overflow-y-auto">
+      <CardContent className="space-y-3 min-h-[800px] max-h-[900px] overflow-y-auto">
         {leads.length > 0 ? (
           leads.map((lead) => <LeadCard key={lead.id} lead={lead} />)
         ) : (
