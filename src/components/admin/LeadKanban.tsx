@@ -212,8 +212,12 @@ export const LeadKanban = () => {
 
   const getStats = () => {
     return {
-      fotosGeradas: leads.filter((l) => l.status === "foto_gerada").length,
-      contatosFeitos: leads.filter((l) => l.status === "contato_feito").length,
+      fotosGeradas: leads.reduce((sum, lead) => sum + (lead.fotos_geradas || 0), 0),
+      contatosFeitos: leads.filter((l) => 
+        l.status === "contato_feito" || 
+        l.status === "venda_realizada" || 
+        l.status === "venda_perdida"
+      ).length,
       vendasRealizadas: leads.filter((l) => l.status === "venda_realizada").length,
       vendasPerdidas: leads.filter((l) => l.status === "venda_perdida").length,
     };
