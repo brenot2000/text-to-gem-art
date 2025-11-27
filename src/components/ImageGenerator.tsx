@@ -242,10 +242,10 @@ IMPORTANTE: Você DEVE gerar uma imagem transformada, não apenas texto. Crie um
                 <Button
                   type="button"
                   size="lg"
-                  className="bg-primary text-white shadow-soft hover:shadow-glow transition-all duration-300 text-lg px-8 py-4 h-auto"
+                  className="bg-primary text-white shadow-soft hover:shadow-glow transition-all duration-300 text-xl sm:text-2xl px-10 sm:px-12 py-6 sm:py-7 h-auto font-semibold"
                   onClick={() => document.getElementById("referenceImage")?.click()}
                 >
-                  <Upload className="w-6 h-6 mr-3" />
+                  <Upload className="w-7 h-7 sm:w-8 sm:h-8 mr-3" />
                   Escolher Foto
                 </Button>
               </div>
