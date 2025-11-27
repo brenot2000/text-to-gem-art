@@ -106,12 +106,19 @@ export const LeadKanban = () => {
           table: "leads",
         },
         (payload) => {
-          // Ignora eventos de UPDATE para evitar conflito com optimistic updates
+          // Para INSERTs e DELETEs, atualiza imediatamente
           if (payload.eventType !== 'UPDATE') {
             clearTimeout(timeoutId);
             timeoutId = setTimeout(() => {
               fetchLeads();
             }, 500);
+          } else {
+            // Para UPDATEs, atualiza após um delay maior para não conflitar com drag
+            // Mas precisa atualizar para refletir mudanças nos campos vendedor e valor
+            clearTimeout(timeoutId);
+            timeoutId = setTimeout(() => {
+              fetchLeads();
+            }, 2000);
           }
         }
       )
