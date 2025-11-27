@@ -25,6 +25,8 @@ type Lead = {
   reference_image_url: string | null;
   generated_image_url: string | null;
   created_at: string;
+  vendedor: string | null;
+  valor_venda: number | null;
 };
 
 const DroppableColumn = ({ 
@@ -228,7 +230,7 @@ export const LeadKanban = () => {
 
   return (
     <>
-      <DashboardStats stats={getStats()} />
+      <DashboardStats stats={getStats()} leads={leads} />
 
       <DndContext
         sensors={sensors}
