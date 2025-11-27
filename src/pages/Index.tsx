@@ -28,7 +28,7 @@ const Index = () => {
               </span>
               <br />
               <span className="text-2xl sm:text-3xl md:text-5xl font-light text-foreground block mt-4">
-                Resultados que a <span className="font-bold text-secondary">beautyness.club</span> pode te gerar
+                Faça o teste agora
               </span>
             </h1>
             
