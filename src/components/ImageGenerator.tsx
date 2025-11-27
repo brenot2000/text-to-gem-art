@@ -368,16 +368,18 @@ IMPORTANTE: Você DEVE gerar uma imagem transformada, não apenas texto. Crie um
               <p className="text-muted-foreground text-lg mb-8">
                 Cada jornada é única. Os resultados podem variar de acordo com dedicação e cuidados individuais.
               </p>
-              <Button
-                asChild
-                size="lg"
-                className="bg-primary text-white hover:bg-primary/90 shadow-soft hover:shadow-glow transition-all duration-300 text-xl px-10 py-6 h-auto"
-              >
-                <a href="https://beautyness.club/" target="_blank" rel="noopener noreferrer">
-                  <Sparkles className="w-6 h-6 mr-3" />
-                  Conheça a Beautyness Club
-                </a>
-              </Button>
+              <div className="flex justify-center">
+                <Button
+                  asChild
+                  size="lg"
+                  className="bg-primary text-white hover:bg-primary/90 shadow-soft hover:shadow-glow transition-all duration-300 text-base sm:text-lg px-8 py-3 h-auto"
+                >
+                  <a href="https://beautyness.club/" target="_blank" rel="noopener noreferrer">
+                    <Sparkles className="w-5 h-5 mr-2" />
+                    Conheça a Beautyness Club
+                  </a>
+                </Button>
+              </div>
             </div>
           </CardContent>
         </Card>
