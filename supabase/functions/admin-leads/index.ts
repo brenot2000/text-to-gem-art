@@ -93,12 +93,13 @@ serve(async (req) => {
 
     // Handle different actions
     if (method === "GET" && action === "list") {
-      // List all leads with retry
+      // List all leads WITHOUT image data to avoid timeout (base64 images are huge)
       const leads = await withRetry(async () => {
         const { data, error } = await supabaseAdmin
           .from("leads")
-          .select("*")
-          .order("created_at", { ascending: false });
+          .select("id, name, email, phone, status, vendedor, valor_venda, fotos_geradas, created_at, updated_at")
+          .order("created_at", { ascending: false })
+          .limit(100);
         
         if (error) {
           console.error("Database error fetching leads:", error);
@@ -110,6 +111,33 @@ serve(async (req) => {
       console.log(`Fetched ${leads?.length || 0} leads successfully`);
       return new Response(
         JSON.stringify({ data: leads }),
+        { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    if (method === "GET" && action === "get-images") {
+      // Get images for a specific lead
+      const leadId = url.searchParams.get("id");
+      if (!leadId) {
+        return new Response(
+          JSON.stringify({ error: "Lead ID required" }),
+          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+
+      const lead = await withRetry(async () => {
+        const { data, error } = await supabaseAdmin
+          .from("leads")
+          .select("reference_image_url, generated_image_url")
+          .eq("id", leadId)
+          .single();
+        
+        if (error) throw error;
+        return data;
+      });
+
+      return new Response(
+        JSON.stringify({ data: lead }),
         { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }

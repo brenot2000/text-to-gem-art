@@ -23,6 +23,7 @@ const DroppableColumn = ({
   count,
   onUpdate,
   onDelete,
+  onFetchImages,
 }: { 
   id: string; 
   title: string; 
@@ -31,6 +32,7 @@ const DroppableColumn = ({
   count: number;
   onUpdate: (id: string, updates: Partial<Lead>) => Promise<boolean>;
   onDelete: (id: string) => Promise<boolean>;
+  onFetchImages: (id: string) => Promise<any>;
 }) => {
   const { setNodeRef, isOver } = useDroppable({
     id: id,
@@ -61,6 +63,7 @@ const DroppableColumn = ({
               lead={lead} 
               onUpdate={onUpdate}
               onDelete={onDelete}
+              onFetchImages={onFetchImages}
             />
           ))
         ) : (
@@ -74,7 +77,7 @@ const DroppableColumn = ({
 };
 
 export const LeadKanban = () => {
-  const { leads, isLoading, updateLead, deleteLead, updateLeadStatus, setLeads } = useAdminLeads();
+  const { leads, isLoading, updateLead, deleteLead, updateLeadStatus, fetchLeadImages, setLeads } = useAdminLeads();
   const [activeId, setActiveId] = useState<string | null>(null);
 
   const sensors = useSensors(
@@ -165,6 +168,7 @@ export const LeadKanban = () => {
               count={getLeadsByStatus(column.status).length}
               onUpdate={updateLead}
               onDelete={deleteLead}
+              onFetchImages={fetchLeadImages}
             />
           ))}
         </div>
@@ -176,6 +180,7 @@ export const LeadKanban = () => {
                 lead={activeLead} 
                 onUpdate={updateLead}
                 onDelete={deleteLead}
+                onFetchImages={fetchLeadImages}
               />
             </div>
           ) : null}

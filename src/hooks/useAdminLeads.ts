@@ -47,8 +47,15 @@ export const useAdminLeads = () => {
         throw new Error(data.error);
       }
 
-      console.log(`Fetched ${data?.data?.length || 0} leads`);
-      setLeads(data?.data || []);
+      // Leads come without images - they'll be loaded on demand
+      const leadsWithNullImages = (data?.data || []).map((lead: Lead) => ({
+        ...lead,
+        reference_image_url: null,
+        generated_image_url: null,
+      }));
+
+      console.log(`Fetched ${leadsWithNullImages.length} leads`);
+      setLeads(leadsWithNullImages);
     } catch (error: any) {
       console.error("Error fetching leads:", error);
       toast({
@@ -58,6 +65,45 @@ export const useAdminLeads = () => {
       });
     } finally {
       setIsLoading(false);
+    }
+  }, []);
+
+  const fetchLeadImages = useCallback(async (leadId: string) => {
+    try {
+      const { data: sessionData } = await supabase.auth.getSession();
+      const token = sessionData?.session?.access_token;
+
+      if (!token) return null;
+
+      const { data, error } = await supabase.functions.invoke(
+        `admin-leads?action=get-images&id=${leadId}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (error || data?.error) return null;
+
+      // Update local state with images
+      setLeads((prev) =>
+        prev.map((lead) =>
+          lead.id === leadId
+            ? {
+                ...lead,
+                reference_image_url: data?.data?.reference_image_url || null,
+                generated_image_url: data?.data?.generated_image_url || null,
+              }
+            : lead
+        )
+      );
+
+      return data?.data;
+    } catch (error) {
+      console.error("Error fetching lead images:", error);
+      return null;
     }
   }, []);
 
@@ -194,6 +240,7 @@ export const useAdminLeads = () => {
     leads,
     isLoading,
     fetchLeads,
+    fetchLeadImages,
     updateLead,
     deleteLead,
     updateLeadStatus,
