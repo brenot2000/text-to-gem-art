@@ -3,7 +3,17 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
-import { Mail, Phone, Calendar, Copy, Check, DollarSign, User, ZoomIn, X } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { Mail, Phone, Calendar, Copy, Check, DollarSign, User, ZoomIn, X, Trash2 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { useState } from "react";
 import { useDraggable } from "@dnd-kit/core";
@@ -37,11 +47,39 @@ export const LeadCard = ({ lead }: LeadCardProps) => {
   const [isSaving, setIsSaving] = useState(false);
   const [imageViewerOpen, setImageViewerOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState<{ url: string; label: string } | null>(null);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const openImageViewer = (url: string, label: string, e: React.MouseEvent) => {
     e.stopPropagation();
     setSelectedImage({ url, label });
     setImageViewerOpen(true);
+  };
+
+  const handleDelete = async () => {
+    setIsDeleting(true);
+    try {
+      const { error } = await supabase
+        .from("leads")
+        .delete()
+        .eq("id", lead.id);
+
+      if (error) throw error;
+
+      toast({
+        title: "✅ Lead deletado!",
+        description: "O card foi removido com sucesso.",
+      });
+    } catch (error: any) {
+      toast({
+        title: "Erro ao deletar",
+        description: error.message,
+        variant: "destructive",
+      });
+    } finally {
+      setIsDeleting(false);
+      setDeleteDialogOpen(false);
+    }
   };
 
   const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
@@ -151,13 +189,26 @@ export const LeadCard = ({ lead }: LeadCardProps) => {
       className="glass-card backdrop-blur-glass border-white/30 bg-[#252541]/90 hover:bg-[#2d2d4a]/90 transition-all cursor-grab active:cursor-grabbing shadow-lg hover:shadow-xl"
     >
       <CardContent className="p-4 space-y-3">
-        <div>
-          <h3 className="text-white font-bold text-base">{lead.name}</h3>
-          {lead.fotos_geradas && lead.fotos_geradas > 1 && (
-            <p className="text-white/60 text-xs mt-1">
-              {lead.fotos_geradas} fotos geradas
-            </p>
-          )}
+        <div className="flex items-start justify-between">
+          <div className="flex-1 min-w-0">
+            <h3 className="text-white font-bold text-base truncate">{lead.name}</h3>
+            {lead.fotos_geradas && lead.fotos_geradas > 1 && (
+              <p className="text-white/60 text-xs mt-1">
+                {lead.fotos_geradas} fotos geradas
+              </p>
+            )}
+          </div>
+          <Button
+            onClick={(e) => {
+              e.stopPropagation();
+              setDeleteDialogOpen(true);
+            }}
+            size="sm"
+            variant="ghost"
+            className="h-7 w-7 p-0 hover:bg-red-500/20 text-white/50 hover:text-red-400 shrink-0 ml-2"
+          >
+            <Trash2 className="w-4 h-4" />
+          </Button>
         </div>
 
         <div className="space-y-2 text-sm">
@@ -344,6 +395,31 @@ export const LeadCard = ({ lead }: LeadCardProps) => {
             </div>
           </DialogContent>
         </Dialog>
+
+        {/* Delete Confirmation Dialog */}
+        <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+          <AlertDialogContent className="bg-[#1a1a2e] border-white/20" onClick={(e) => e.stopPropagation()}>
+            <AlertDialogHeader>
+              <AlertDialogTitle className="text-white">Deletar lead?</AlertDialogTitle>
+              <AlertDialogDescription className="text-white/70">
+                Tem certeza que deseja deletar o lead <strong className="text-white">{lead.name}</strong>? 
+                Esta ação não pode ser desfeita.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel className="bg-white/10 border-white/20 text-white hover:bg-white/20">
+                Cancelar
+              </AlertDialogCancel>
+              <AlertDialogAction
+                onClick={handleDelete}
+                disabled={isDeleting}
+                className="bg-red-600 hover:bg-red-700 text-white"
+              >
+                {isDeleting ? "Deletando..." : "Deletar"}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </CardContent>
     </Card>
   );
