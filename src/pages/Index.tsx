@@ -6,11 +6,11 @@ import logo from "@/assets/logo.png";
 const Index = () => {
   return (
     <div className="min-h-screen bg-gradient-hero relative overflow-hidden">
-      {/* Floating background elements */}
+      {/* Floating background elements - sutis */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 left-20 w-72 h-72 bg-gradient-primary rounded-full opacity-25 blur-3xl animate-float-smooth"></div>
-        <div className="absolute top-60 right-20 w-96 h-96 bg-gradient-secondary rounded-full opacity-20 blur-3xl animate-float-smooth" style={{ animationDelay: '2s' }}></div>
-        <div className="absolute bottom-40 left-40 w-80 h-80 bg-gradient-accent rounded-full opacity-25 blur-3xl animate-float-smooth" style={{ animationDelay: '4s' }}></div>
+        <div className="absolute top-20 left-20 w-72 h-72 rounded-full opacity-10 blur-3xl animate-float-smooth" style={{ background: 'linear-gradient(135deg, #E8A5B8 0%, #D88FA3 100%)' }}></div>
+        <div className="absolute top-60 right-20 w-96 h-96 rounded-full opacity-10 blur-3xl animate-float-smooth" style={{ animationDelay: '2s', background: 'linear-gradient(135deg, #8AC4D0 0%, #6BA8B5 100%)' }}></div>
+        <div className="absolute bottom-40 left-40 w-80 h-80 rounded-full opacity-10 blur-3xl animate-float-smooth" style={{ animationDelay: '4s', background: 'linear-gradient(135deg, #C09874 0%, #A88665 100%)' }}></div>
       </div>
 
       {/* Hero Section */}
@@ -20,10 +20,10 @@ const Index = () => {
             <div className="flex justify-center mb-8">
               <img src={logo} alt="Beautyness Club" className="h-12 w-auto" />
             </div>
-            <h1 className="text-6xl md:text-7xl font-bold mb-8 leading-tight text-foreground drop-shadow-sm">
+            <h1 className="text-6xl md:text-7xl font-bold mb-8 leading-tight text-foreground">
               Se veja mais magra com
               <br />
-              <span className="text-7xl md:text-8xl bg-gradient-primary bg-clip-text text-transparent drop-shadow-none">
+              <span className="text-7xl md:text-8xl font-extrabold text-primary">
                 inteligência artificial
               </span>
               <br />
@@ -32,40 +32,40 @@ const Index = () => {
               </span>
             </h1>
             
-            <p className="text-2xl md:text-3xl text-foreground max-w-4xl mx-auto mb-6 leading-relaxed font-light">
-              Basta <span className="font-semibold text-secondary">enviar uma imagem</span> que nossa IA mostrará o resultado
+            <p className="text-2xl md:text-3xl text-foreground max-w-4xl mx-auto mb-6 leading-relaxed">
+              Basta <span className="font-bold text-primary">enviar uma imagem</span> que nossa IA mostrará o resultado
             </p>
 
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-16 leading-relaxed">
               Nossa inteligência artificial exclusiva mostra exatamente como você ficaria com o corpo que sempre sonhou.
               <br />
-              <span className="font-semibold text-foreground">É 100% gratuito e leva apenas 30 segundos.</span>
+              <span className="font-bold text-foreground">É 100% gratuito e leva apenas 30 segundos.</span>
             </p>
 
             {/* Feature Pills */}
             <div className="flex flex-wrap justify-center items-center gap-6 mb-16">
-              <div className="glass-card px-6 py-3 rounded-full backdrop-blur-glass border border-primary/40 bg-card/90 shadow-soft">
+              <div className="px-6 py-3 rounded-full border-2 border-primary/30 bg-card shadow-soft">
                 <div className="flex items-center gap-3 text-foreground">
                   <Shield className="w-5 h-5 text-primary" />
-                  <span className="font-medium">100% Privado & Seguro</span>
+                  <span className="font-semibold">100% Privado & Seguro</span>
                 </div>
               </div>
-              <div className="glass-card px-6 py-3 rounded-full backdrop-blur-glass border border-accent/40 bg-card/90 shadow-soft">
+              <div className="px-6 py-3 rounded-full border-2 border-accent/30 bg-card shadow-soft">
                 <div className="flex items-center gap-3 text-foreground">
                   <Target className="w-5 h-5 text-accent" />
-                  <span className="font-medium">Resultados Realistas</span>
+                  <span className="font-semibold">Resultados Realistas</span>
                 </div>
               </div>
-              <div className="glass-card px-6 py-3 rounded-full backdrop-blur-glass border border-secondary/40 bg-card/90 shadow-soft">
+              <div className="px-6 py-3 rounded-full border-2 border-secondary/30 bg-card shadow-soft">
                 <div className="flex items-center gap-3 text-foreground">
                   <Zap className="w-5 h-5 text-secondary" />
-                  <span className="font-medium">IA Avançada</span>
+                  <span className="font-semibold">IA Avançada</span>
                 </div>
               </div>
             </div>
 
             <div className="animate-bounce">
-              <ArrowDown className="w-10 h-10 text-muted-foreground mx-auto" />
+              <ArrowDown className="w-10 h-10 text-primary mx-auto" />
             </div>
           </div>
         </div>
@@ -81,7 +81,7 @@ const Index = () => {
             <img 
               src="/lovable-uploads/35df97ed-1871-47d7-bfef-6ba2a1f506e5.png" 
               alt="Exemplo real de transformação - antes e depois"
-              className="w-full max-w-4xl mx-auto rounded-3xl shadow-intense border-2 border-secondary/20"
+              className="w-full max-w-4xl mx-auto rounded-3xl shadow-intense border-2 border-primary/20"
             />
           </div>
         </div>
@@ -96,22 +96,22 @@ const Index = () => {
             </h2>
           </div>
           <div className="grid md:grid-cols-3 gap-8">
-            <Card className="glass-card backdrop-blur-glass border-primary/40 bg-card/90 shadow-soft animate-slide-in-left">
+            <Card className="border-2 border-primary/20 bg-card shadow-soft animate-slide-in-left hover:shadow-glow transition-shadow">
               <CardContent className="p-8 text-center">
-                <div className="text-5xl font-bold bg-gradient-primary bg-clip-text text-transparent mb-4">98%</div>
-                <p className="text-muted-foreground text-lg">Se sentem mais motivadas após ver o resultado</p>
+                <div className="text-5xl font-bold text-primary mb-4">98%</div>
+                <p className="text-muted-foreground text-lg font-medium">Se sentem mais motivadas após ver o resultado</p>
               </CardContent>
             </Card>
-            <Card className="glass-card backdrop-blur-glass border-accent/40 bg-card/90 shadow-soft animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+            <Card className="border-2 border-accent/20 bg-card shadow-soft animate-fade-in-up hover:shadow-glow transition-shadow" style={{ animationDelay: '0.2s' }}>
               <CardContent className="p-8 text-center">
-                <div className="text-5xl font-bold bg-gradient-secondary bg-clip-text text-transparent mb-4">30s</div>
-                <p className="text-muted-foreground text-lg">É o tempo médio para gerar sua transformação</p>
+                <div className="text-5xl font-bold text-accent mb-4">30s</div>
+                <p className="text-muted-foreground text-lg font-medium">É o tempo médio para gerar sua transformação</p>
               </CardContent>
             </Card>
-            <Card className="glass-card backdrop-blur-glass border-secondary/40 bg-card/90 shadow-soft animate-slide-in-right">
+            <Card className="border-2 border-secondary/20 bg-card shadow-soft animate-slide-in-right hover:shadow-glow transition-shadow">
               <CardContent className="p-8 text-center">
-                <div className="text-5xl font-bold bg-gradient-accent bg-clip-text text-transparent mb-4">+50k</div>
-                <p className="text-muted-foreground text-lg">Mulheres já visualizaram sua melhor versão</p>
+                <div className="text-5xl font-bold text-secondary mb-4">+50k</div>
+                <p className="text-muted-foreground text-lg font-medium">Mulheres já visualizaram sua melhor versão</p>
               </CardContent>
             </Card>
           </div>
@@ -121,15 +121,14 @@ const Index = () => {
       {/* Tutorial Section */}
       <div className="container mx-auto px-6 mb-20 relative z-10">
         <div className="max-w-6xl mx-auto">
-          <Card className="glass-card backdrop-blur-glass border-primary/40 bg-card/90 shadow-soft animate-fade-in-up">
+          <Card className="border-2 border-primary/20 bg-card shadow-soft animate-fade-in-up">
             <CardContent className="p-12">
               <div className="text-center mb-12">
                 <div className="flex justify-center mb-6">
                   <div className="relative">
-                    <div className="p-4 rounded-full bg-gradient-primary shadow-glow">
-                      <Camera className="w-8 h-8 text-foreground" />
+                    <div className="p-4 rounded-full bg-primary shadow-glow">
+                      <Camera className="w-8 h-8 text-white" />
                     </div>
-                    <div className="absolute inset-0 rounded-full bg-gradient-primary opacity-30 blur-xl"></div>
                   </div>
                 </div>
                 <h3 className="text-3xl md:text-4xl font-bold mb-6 text-foreground">
@@ -142,32 +141,32 @@ const Index = () => {
               
               <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
                 <div className="text-center space-y-4 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
-                  <div className="p-6 rounded-full bg-gradient-primary shadow-brutal w-20 h-20 mx-auto flex items-center justify-center transform rotate-3">
-                    <span className="text-3xl font-bold text-foreground">1</span>
+                  <div className="p-6 rounded-full bg-primary text-white shadow-soft w-20 h-20 mx-auto flex items-center justify-center transform rotate-3">
+                    <span className="text-3xl font-bold">1</span>
                   </div>
                   <h4 className="font-bold text-foreground text-xl">Corpo Completo</h4>
                   <p className="text-muted-foreground">Certifique-se de aparecer da cabeça aos pés na foto</p>
                 </div>
                 
                 <div className="text-center space-y-4 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
-                  <div className="p-6 rounded-full bg-gradient-secondary shadow-brutal w-20 h-20 mx-auto flex items-center justify-center transform -rotate-2">
-                    <span className="text-3xl font-bold text-foreground">2</span>
+                  <div className="p-6 rounded-full bg-accent text-white shadow-soft w-20 h-20 mx-auto flex items-center justify-center transform -rotate-2">
+                    <span className="text-3xl font-bold">2</span>
                   </div>
                   <h4 className="font-bold text-foreground text-xl">Rosto de Frente</h4>
                   <p className="text-muted-foreground">Olhe diretamente para a câmera com o rosto bem visível</p>
                 </div>
                 
                 <div className="text-center space-y-4 animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
-                  <div className="p-6 rounded-full bg-gradient-accent shadow-brutal w-20 h-20 mx-auto flex items-center justify-center transform rotate-1">
-                    <span className="text-3xl font-bold text-foreground">3</span>
+                  <div className="p-6 rounded-full bg-secondary text-white shadow-soft w-20 h-20 mx-auto flex items-center justify-center transform rotate-1">
+                    <span className="text-3xl font-bold">3</span>
                   </div>
                   <h4 className="font-bold text-foreground text-xl">Boa Iluminação</h4>
                   <p className="text-muted-foreground">Use luz natural ou ambiente bem iluminado</p>
                 </div>
                 
                 <div className="text-center space-y-4 animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
-                  <div className="p-6 rounded-full bg-gradient-warm shadow-brutal w-20 h-20 mx-auto flex items-center justify-center transform -rotate-1">
-                    <span className="text-3xl font-bold text-foreground">4</span>
+                  <div className="p-6 rounded-full bg-primary text-white shadow-soft w-20 h-20 mx-auto flex items-center justify-center transform -rotate-1">
+                    <span className="text-3xl font-bold">4</span>
                   </div>
                   <h4 className="font-bold text-foreground text-xl">Foto Nítida</h4>
                   <p className="text-muted-foreground">Evite fotos tremidas ou com baixa qualidade</p>

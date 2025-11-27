@@ -8,55 +8,55 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* Beautyness Club palette */
-    --background: 30 25% 95%; /* F4F1ED */
-    --foreground: 30 15% 20%; /* Texto escuro para legibilidade */
+    /* Beautyness Club palette - otimizada para legibilidade */
+    --background: 30 25% 95%; /* F4F1ED - fundo principal */
+    --foreground: 30 30% 25%; /* Texto principal escuro */
 
-    --card: 0 0% 100%; /* FFFFFF */
-    --card-foreground: 30 15% 20%;
+    --card: 0 0% 100%; /* FFFFFF - cards brancos */
+    --card-foreground: 30 30% 25%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 30 15% 20%;
+    --popover-foreground: 30 30% 25%;
 
-    --primary: 345 77% 87%; /* F7C4D3 - rosa */
-    --primary-foreground: 30 15% 20%;
+    --primary: 345 65% 65%; /* Rosa mais escuro para melhor contraste */
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 30 33% 40%; /* BFA88A mais escuro para texto */
+    --secondary: 30 33% 50%; /* BFA88A escurecido para texto */
     --secondary-foreground: 0 0% 100%;
 
-    --muted: 30 25% 90%;
-    --muted-foreground: 30 15% 35%;
+    --muted: 30 20% 88%;
+    --muted-foreground: 30 25% 35%;
 
-    --accent: 190 50% 83%; /* BEE1E8 - azul claro */
-    --accent-foreground: 30 15% 20%;
+    --accent: 190 40% 60%; /* BEE1E8 escurecido */
+    --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 30 25% 85%;
+    --border: 30 20% 82%;
     --input: 0 0% 100%;
-    --ring: 345 77% 87%;
+    --ring: 345 65% 65%;
 
     --radius: 1.5rem;
 
-    /* Beautyness Club gradients - mais vibrantes */
-    --gradient-primary: linear-gradient(135deg, #F7C4D3 0%, #E8A5B8 100%);
-    --gradient-secondary: linear-gradient(135deg, #BEE1E8 0%, #96CAD6 100%);
-    --gradient-accent: linear-gradient(135deg, #F4F1ED 0%, #E5DED6 100%);
-    --gradient-warm: linear-gradient(135deg, #F7C4D3 0%, #D4A68B 100%);
-    --gradient-cool: linear-gradient(135deg, #BEE1E8 0%, #A8D4E0 100%);
-    --gradient-hero: linear-gradient(135deg, #BEE1E8 0%, #E8C9D9 50%, #F4E8E1 100%);
+    /* Beautyness Club gradients - com melhor contraste */
+    --gradient-primary: linear-gradient(135deg, #E8A5B8 0%, #D88FA3 100%);
+    --gradient-secondary: linear-gradient(135deg, #8AC4D0 0%, #6BA8B5 100%);
+    --gradient-accent: linear-gradient(135deg, #E5DED6 0%, #D4C7BA 100%);
+    --gradient-warm: linear-gradient(135deg, #E8A5B8 0%, #C09874 100%);
+    --gradient-cool: linear-gradient(135deg, #8AC4D0 0%, #A4C8D1 100%);
+    --gradient-hero: linear-gradient(135deg, #F4F1ED 0%, #E8DFD8 100%);
     
-    /* Glassmorphism effects */
-    --glass-bg: rgba(255, 255, 255, 0.15);
+    /* Glassmorphism effects - ajustado */
+    --glass-bg: rgba(255, 255, 255, 0.75);
     --glass-border: rgba(191, 168, 138, 0.3);
-    --glass-shadow: 0 8px 32px 0 rgba(191, 168, 138, 0.2);
+    --glass-shadow: 0 8px 32px 0 rgba(191, 168, 138, 0.15);
     
-    /* Beautyness shadows */
-    --shadow-brutal: 8px 8px 0px #F7C4D3;
-    --shadow-soft: 0 20px 25px -5px rgba(191, 168, 138, 0.2), 0 10px 10px -5px rgba(191, 168, 138, 0.1);
-    --shadow-glow: 0 0 50px rgba(247, 196, 211, 0.5);
-    --shadow-intense: 0 25px 50px -12px rgba(247, 196, 211, 0.6);
+    /* Beautyness shadows - ajustado */
+    --shadow-brutal: 6px 6px 0px rgba(232, 165, 184, 0.4);
+    --shadow-soft: 0 10px 20px -5px rgba(191, 168, 138, 0.2);
+    --shadow-glow: 0 0 40px rgba(232, 165, 184, 0.3);
+    --shadow-intense: 0 20px 40px -10px rgba(232, 165, 184, 0.4);
 
     --sidebar-background: 240 50% 98%;
     --sidebar-foreground: 230 15% 15%;
