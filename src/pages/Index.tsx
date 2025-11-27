@@ -21,10 +21,10 @@ const Index = () => {
               <img src={logo} alt="Beautyness Club" className="h-12 w-auto drop-shadow-lg brightness-0 invert" />
             </div>
             <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold mb-6 md:mb-8 leading-tight text-foreground">
-              Se veja mais magra com
+              Quer ter uma ideia de como poderia ficar
               <br />
               <span className="text-5xl sm:text-6xl md:text-8xl font-extrabold text-primary block my-2">
-                inteligência artificial
+                após iniciar uma jornada de cuidados?
               </span>
               <br />
               <span className="text-2xl sm:text-3xl md:text-5xl font-light text-foreground block mt-4">
@@ -33,11 +33,11 @@ const Index = () => {
             </h1>
             
             <p className="text-lg sm:text-xl md:text-3xl text-foreground max-w-4xl mx-auto mb-4 md:mb-6 leading-relaxed">
-              Basta <span className="font-bold text-primary">enviar uma imagem</span> que nossa IA mostrará o resultado
+              Basta <span className="font-bold text-primary">enviar uma imagem</span> que nossa IA mostrará uma projeção
             </p>
 
             <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto mb-12 md:mb-16 leading-relaxed">
-              Nossa inteligência artificial exclusiva mostra exatamente como você ficaria com o corpo que sempre sonhou.
+              Nossa IA cria uma projeção ilustrativa, baseada na sua foto, para te ajudar na motivação.
               <br className="hidden sm:block" />
               <span className="font-bold text-foreground">É 100% gratuito e leva apenas 30 segundos.</span>
             </p>
