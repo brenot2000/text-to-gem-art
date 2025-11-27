@@ -90,7 +90,7 @@ const Admin = () => {
         </div>
       </div>
 
-      <div className="container mx-auto px-6 py-8">
+      <div className="container mx-auto px-6 py-12 pb-20">
         <LeadKanban />
       </div>
     </div>
