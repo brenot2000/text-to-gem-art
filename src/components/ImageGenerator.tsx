@@ -28,6 +28,9 @@ export const ImageGenerator = () => {
   const [referenceImage, setReferenceImage] = useState<string | null>(null);
   const [referenceFile, setReferenceFile] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [progressMessage, setProgressMessage] = useState("");
+  const progressInterval = useRef<ReturnType<typeof setInterval> | null>(null);
   const [showDataForm, setShowDataForm] = useState(false);
   const [userData, setUserData] = useState({
     name: "",
