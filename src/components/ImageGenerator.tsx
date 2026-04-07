@@ -317,24 +317,31 @@ IMPORTANTE: Você DEVE gerar uma imagem transformada, não apenas texto. Crie um
             )}
           </div>
 
-          <Button
-            onClick={handleShowDataForm}
-            disabled={isLoading || !referenceFile}
-            size="lg"
-            className="w-full bg-primary text-white shadow-soft hover:shadow-glow transition-all duration-500 text-xl px-8 py-6 h-auto disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {isLoading ? (
-              <>
-                <Loader2 className="w-6 h-6 mr-3 animate-spin" />
-                Criando sua transformação...
-              </>
-            ) : (
-              <>
-                <Zap className="w-6 h-6 mr-3" />
-                Ver Minha Transformação
-              </>
-            )}
-          </Button>
+          {isLoading ? (
+            <div className="space-y-4 w-full">
+              <div className="relative w-full h-3 bg-muted rounded-full overflow-hidden">
+                <div
+                  className="absolute inset-y-0 left-0 bg-primary rounded-full transition-all duration-500 ease-out"
+                  style={{ width: `${progress}%` }}
+                />
+              </div>
+              <div className="flex items-center justify-center gap-3">
+                <Loader2 className="w-5 h-5 animate-spin text-primary" />
+                <span className="text-lg font-medium text-foreground">{progressMessage}</span>
+                <span className="text-sm text-muted-foreground font-bold">{progress}%</span>
+              </div>
+            </div>
+          ) : (
+            <Button
+              onClick={handleShowDataForm}
+              disabled={!referenceFile}
+              size="lg"
+              className="w-full bg-primary text-white shadow-soft hover:shadow-glow transition-all duration-500 text-xl px-8 py-6 h-auto disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <Zap className="w-6 h-6 mr-3" />
+              Ver Minha Transformação
+            </Button>
+          )}
         </CardContent>
       </Card>
 
