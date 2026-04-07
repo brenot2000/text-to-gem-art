@@ -122,6 +122,43 @@ export const ImageGenerator = () => {
     }));
   };
 
+  const progressSteps = [
+    { at: 5, msg: "Preparando sua foto..." },
+    { at: 15, msg: "Analisando características..." },
+    { at: 30, msg: "Criando sua transformação..." },
+    { at: 50, msg: "Aplicando ajustes corporais..." },
+    { at: 65, msg: "Refinando detalhes do rosto..." },
+    { at: 80, msg: "Finalizando a imagem..." },
+    { at: 90, msg: "Quase pronto..." },
+  ];
+
+  const startProgress = () => {
+    setProgress(0);
+    setProgressMessage("Iniciando...");
+    let current = 0;
+    progressInterval.current = setInterval(() => {
+      current += Math.random() * 3 + 0.5;
+      if (current > 95) current = 95;
+      setProgress(Math.round(current));
+      const step = [...progressSteps].reverse().find(s => current >= s.at);
+      if (step) setProgressMessage(step.msg);
+    }, 800);
+  };
+
+  const stopProgress = (success: boolean) => {
+    if (progressInterval.current) {
+      clearInterval(progressInterval.current);
+      progressInterval.current = null;
+    }
+    if (success) {
+      setProgress(100);
+      setProgressMessage("Concluído! ✨");
+    } else {
+      setProgress(0);
+      setProgressMessage("");
+    }
+  };
+
   const generateImage = async () => {
     if (!referenceFile) {
       toast.error("Por favor, selecione uma imagem de referência");
@@ -130,9 +167,10 @@ export const ImageGenerator = () => {
 
     setIsLoading(true);
     setGeneratedImage(null);
+    startProgress();
 
-    // Safety timeout: force stop after 90 seconds
     const safetyTimeout = setTimeout(() => {
+      stopProgress(false);
       setIsLoading(false);
       toast.error("A geração demorou muito. Tente novamente.");
     }, 90000);
@@ -150,7 +188,8 @@ IMPORTANTE: Você DEVE gerar uma imagem transformada, não apenas texto. Crie um
         try {
           console.log(`Tentativa ${attempt + 1}/${maxRetries}...`);
           if (attempt > 0) {
-            toast.info(`Processando... Tentativa ${attempt + 1}/${maxRetries}`);
+            setProgress(10);
+            setProgressMessage(`Tentativa ${attempt + 1}/${maxRetries}...`);
             await new Promise(r => setTimeout(r, 1000));
           }
 
@@ -162,22 +201,24 @@ IMPORTANTE: Você DEVE gerar uma imagem transformada, não apenas texto. Crie um
 
           if (data?.error === 'limit_reached') {
             toast.error(data.message || 'Você atingiu o limite de 3 gerações de fotos.');
+            stopProgress(false);
             return;
           }
 
           if (data?.error === 'Rate limit exceeded') {
             toast.error('Limite de uso atingido. Aguarde alguns minutos.');
+            stopProgress(false);
             return;
           }
 
           if (data?.success) {
+            stopProgress(true);
             const imageUrl = `data:${data.mimeType};base64,${data.imageData}`;
             setGeneratedImage(imageUrl);
             toast.success("Transformação concluída! Saiba que nós podemos te ajudar a ter esse resultado!");
             return;
           }
 
-          // Not successful, continue to next attempt if available
           if (attempt === maxRetries - 1) {
             toast.error("Não foi possível gerar a imagem. O serviço pode estar ocupado, tente novamente em alguns minutos.");
           }
@@ -188,6 +229,7 @@ IMPORTANTE: Você DEVE gerar uma imagem transformada, não apenas texto. Crie um
           }
         }
       }
+      stopProgress(false);
     } finally {
       clearTimeout(safetyTimeout);
       setIsLoading(false);
