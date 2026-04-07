@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -28,6 +28,9 @@ export const ImageGenerator = () => {
   const [referenceImage, setReferenceImage] = useState<string | null>(null);
   const [referenceFile, setReferenceFile] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [progressMessage, setProgressMessage] = useState("");
+  const progressInterval = useRef<ReturnType<typeof setInterval> | null>(null);
   const [showDataForm, setShowDataForm] = useState(false);
   const [userData, setUserData] = useState({
     name: "",
@@ -119,6 +122,43 @@ export const ImageGenerator = () => {
     }));
   };
 
+  const progressSteps = [
+    { at: 5, msg: "Preparando sua foto..." },
+    { at: 15, msg: "Analisando características..." },
+    { at: 30, msg: "Criando sua transformação..." },
+    { at: 50, msg: "Aplicando ajustes corporais..." },
+    { at: 65, msg: "Refinando detalhes do rosto..." },
+    { at: 80, msg: "Finalizando a imagem..." },
+    { at: 90, msg: "Quase pronto..." },
+  ];
+
+  const startProgress = () => {
+    setProgress(0);
+    setProgressMessage("Iniciando...");
+    let current = 0;
+    progressInterval.current = setInterval(() => {
+      current += Math.random() * 3 + 0.5;
+      if (current > 95) current = 95;
+      setProgress(Math.round(current));
+      const step = [...progressSteps].reverse().find(s => current >= s.at);
+      if (step) setProgressMessage(step.msg);
+    }, 800);
+  };
+
+  const stopProgress = (success: boolean) => {
+    if (progressInterval.current) {
+      clearInterval(progressInterval.current);
+      progressInterval.current = null;
+    }
+    if (success) {
+      setProgress(100);
+      setProgressMessage("Concluído! ✨");
+    } else {
+      setProgress(0);
+      setProgressMessage("");
+    }
+  };
+
   const generateImage = async () => {
     if (!referenceFile) {
       toast.error("Por favor, selecione uma imagem de referência");
@@ -127,9 +167,10 @@ export const ImageGenerator = () => {
 
     setIsLoading(true);
     setGeneratedImage(null);
+    startProgress();
 
-    // Safety timeout: force stop after 90 seconds
     const safetyTimeout = setTimeout(() => {
+      stopProgress(false);
       setIsLoading(false);
       toast.error("A geração demorou muito. Tente novamente.");
     }, 90000);
@@ -147,7 +188,8 @@ IMPORTANTE: Você DEVE gerar uma imagem transformada, não apenas texto. Crie um
         try {
           console.log(`Tentativa ${attempt + 1}/${maxRetries}...`);
           if (attempt > 0) {
-            toast.info(`Processando... Tentativa ${attempt + 1}/${maxRetries}`);
+            setProgress(10);
+            setProgressMessage(`Tentativa ${attempt + 1}/${maxRetries}...`);
             await new Promise(r => setTimeout(r, 1000));
           }
 
@@ -159,22 +201,24 @@ IMPORTANTE: Você DEVE gerar uma imagem transformada, não apenas texto. Crie um
 
           if (data?.error === 'limit_reached') {
             toast.error(data.message || 'Você atingiu o limite de 3 gerações de fotos.');
+            stopProgress(false);
             return;
           }
 
           if (data?.error === 'Rate limit exceeded') {
             toast.error('Limite de uso atingido. Aguarde alguns minutos.');
+            stopProgress(false);
             return;
           }
 
           if (data?.success) {
+            stopProgress(true);
             const imageUrl = `data:${data.mimeType};base64,${data.imageData}`;
             setGeneratedImage(imageUrl);
             toast.success("Transformação concluída! Saiba que nós podemos te ajudar a ter esse resultado!");
             return;
           }
 
-          // Not successful, continue to next attempt if available
           if (attempt === maxRetries - 1) {
             toast.error("Não foi possível gerar a imagem. O serviço pode estar ocupado, tente novamente em alguns minutos.");
           }
@@ -185,6 +229,7 @@ IMPORTANTE: Você DEVE gerar uma imagem transformada, não apenas texto. Crie um
           }
         }
       }
+      stopProgress(false);
     } finally {
       clearTimeout(safetyTimeout);
       setIsLoading(false);
@@ -272,24 +317,31 @@ IMPORTANTE: Você DEVE gerar uma imagem transformada, não apenas texto. Crie um
             )}
           </div>
 
-          <Button
-            onClick={handleShowDataForm}
-            disabled={isLoading || !referenceFile}
-            size="lg"
-            className="w-full bg-primary text-white shadow-soft hover:shadow-glow transition-all duration-500 text-xl px-8 py-6 h-auto disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {isLoading ? (
-              <>
-                <Loader2 className="w-6 h-6 mr-3 animate-spin" />
-                Criando sua transformação...
-              </>
-            ) : (
-              <>
-                <Zap className="w-6 h-6 mr-3" />
-                Ver Minha Transformação
-              </>
-            )}
-          </Button>
+          {isLoading ? (
+            <div className="space-y-4 w-full">
+              <div className="relative w-full h-3 bg-muted rounded-full overflow-hidden">
+                <div
+                  className="absolute inset-y-0 left-0 bg-primary rounded-full transition-all duration-500 ease-out"
+                  style={{ width: `${progress}%` }}
+                />
+              </div>
+              <div className="flex items-center justify-center gap-3">
+                <Loader2 className="w-5 h-5 animate-spin text-primary" />
+                <span className="text-lg font-medium text-foreground">{progressMessage}</span>
+                <span className="text-sm text-muted-foreground font-bold">{progress}%</span>
+              </div>
+            </div>
+          ) : (
+            <Button
+              onClick={handleShowDataForm}
+              disabled={!referenceFile}
+              size="lg"
+              className="w-full bg-primary text-white shadow-soft hover:shadow-glow transition-all duration-500 text-xl px-8 py-6 h-auto disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <Zap className="w-6 h-6 mr-3" />
+              Ver Minha Transformação
+            </Button>
+          )}
         </CardContent>
       </Card>
 
