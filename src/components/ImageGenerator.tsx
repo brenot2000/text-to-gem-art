@@ -119,7 +119,7 @@ export const ImageGenerator = () => {
     }));
   };
 
-  const generateImage = async (retryCount = 0) => {
+  const generateImage = async () => {
     if (!referenceFile) {
       toast.error("Por favor, selecione uma imagem de referência");
       return;
@@ -128,78 +128,66 @@ export const ImageGenerator = () => {
     setIsLoading(true);
     setGeneratedImage(null);
 
+    // Safety timeout: force stop after 90 seconds
+    const safetyTimeout = setTimeout(() => {
+      setIsLoading(false);
+      toast.error("A geração demorou muito. Tente novamente.");
+    }, 90000);
+
+    const maxRetries = 3;
+
     try {
       const enhancedPrompt = `${DEFAULT_PROMPT}
 
 IMPORTANTE: Você DEVE gerar uma imagem transformada, não apenas texto. Crie uma imagem visual mostrando a pessoa com as transformações solicitadas.`;
 
-      // Convert image to base64
       const { data: imageData, mimeType } = await convertImageToBase64(referenceFile);
 
-      console.log('Calling edge function to generate image...');
+      for (let attempt = 0; attempt < maxRetries; attempt++) {
+        try {
+          console.log(`Tentativa ${attempt + 1}/${maxRetries}...`);
+          if (attempt > 0) {
+            toast.info(`Processando... Tentativa ${attempt + 1}/${maxRetries}`);
+            await new Promise(r => setTimeout(r, 1000));
+          }
 
-      // Call edge function with user data
-      const { data, error } = await supabase.functions.invoke('generate-fitness-image', {
-        body: {
-          imageData,
-          mimeType,
-          prompt: enhancedPrompt,
-          userData: userData,
-        },
-      });
+          const { data, error } = await supabase.functions.invoke('generate-fitness-image', {
+            body: { imageData, mimeType, prompt: enhancedPrompt, userData },
+          });
 
-      if (error) {
-        console.error('Edge function error:', error);
-        throw new Error(error.message || 'Erro ao chamar a função');
-      }
+          if (error) throw new Error(error.message || 'Erro ao chamar a função');
 
-      if (!data || !data.success) {
-        // Verifica se atingiu o limite de 3 fotos
-        if (data?.error === 'limit_reached') {
-          toast.error(data.message || 'Você atingiu o limite de 3 gerações de fotos.');
-          throw new Error('Limit reached');
+          if (data?.error === 'limit_reached') {
+            toast.error(data.message || 'Você atingiu o limite de 3 gerações de fotos.');
+            return;
+          }
+
+          if (data?.error === 'Rate limit exceeded') {
+            toast.error('Limite de uso atingido. Aguarde alguns minutos.');
+            return;
+          }
+
+          if (data?.success) {
+            const imageUrl = `data:${data.mimeType};base64,${data.imageData}`;
+            setGeneratedImage(imageUrl);
+            toast.success("Transformação concluída! Saiba que nós podemos te ajudar a ter esse resultado!");
+            return;
+          }
+
+          // Not successful, continue to next attempt if available
+          if (attempt === maxRetries - 1) {
+            toast.error("Não foi possível gerar a imagem. O serviço pode estar ocupado, tente novamente em alguns minutos.");
+          }
+        } catch (attemptError) {
+          console.error(`Tentativa ${attempt + 1} falhou:`, attemptError);
+          if (attempt === maxRetries - 1) {
+            toast.error("Erro ao gerar imagem. Tente novamente em alguns minutos.");
+          }
         }
-        
-        if (data?.error === 'Rate limit exceeded') {
-          toast.error('Limite de uso atingido. Aguarde alguns minutos e tente novamente.');
-          throw new Error('Rate limit exceeded');
-        }
-        
-        if (retryCount < 2) {
-          console.log(`Tentativa ${retryCount + 1} falhou. Tentando novamente...`);
-          toast.info(`Processando... Tentativa ${retryCount + 2}/3`);
-          setTimeout(() => generateImage(retryCount + 1), 1000);
-          return;
-        }
-        
-        throw new Error(data?.message || 'A API não conseguiu gerar uma imagem');
-      }
-
-      // Success - construct image URL from base64 data
-      const imageUrl = `data:${data.mimeType};base64,${data.imageData}`;
-      setGeneratedImage(imageUrl);
-      toast.success("Transformação concluída! Saiba que nós podemos te ajudar a ter esse resultado!");
-
-    } catch (error) {
-      console.error("Erro ao gerar imagem:", error);
-
-      if (error instanceof Error) {
-        if (error.message.includes('Limit reached')) {
-          // Já mostrou o toast no bloco anterior
-        } else if (error.message.includes('Rate limit')) {
-          toast.error('Limite de uso atingido. Aguarde alguns minutos.');
-        } else if (error.message.includes('após 3 tentativas')) {
-          toast.error('Não foi possível gerar a imagem após 3 tentativas. Tente com outra foto.');
-        } else {
-          toast.error('Erro ao gerar imagem. Tente novamente.');
-        }
-      } else {
-        toast.error("Erro inesperado. Tente novamente.");
       }
     } finally {
-      if (retryCount === 0) {
-        setIsLoading(false);
-      }
+      clearTimeout(safetyTimeout);
+      setIsLoading(false);
     }
   };
 
